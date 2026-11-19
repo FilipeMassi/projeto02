@@ -20,7 +20,9 @@ const score={home:2,away:0};const outcome=score.home>score.away?'home':score.hom
 const source=match[1];
 const extract=(start,end)=>{const a=source.indexOf(start),b=source.indexOf(end,a);assert(a>=0&&b>a,'função não encontrada: '+start);return source.slice(a,b)};
 const engine=extract('const pickFromScore=', 'function brazilDate(');
-const context={leagueStandings:[{id:1,name:'Vasco',points:40,wins:10,played:30,goal_difference:2,goals_for:30,rank:8},{id:2,name:'Rival',points:40,wins:10,played:30,goal_difference:2,goals_for:30,rank:7}],remainingFixtures:[{id:'test',home_id:1,away_id:2}],fullPicks:{},scores:{},localStorage:{getItem:()=>null,setItem:()=>{}},flat:[],state:{},KEY:'test',renderFullSimulator:()=>{},render:()=>{},toast:()=>{}};
+const context={leagueStandings:[{id:1,name:'Vasco',points:40,wins:10,played:30,goal_difference:2,goals_for:30,rank:8},{id:2,name:'Rival',points:40,wins:10,played:30,goal_difference:2,goals_for:30,rank:7}],remainingFixtures:[{id:'test',home_id:1,away_id:2}],fullPicks:{},scores:{},SCORE_KEY:'test-scores',setFullPick:function(id,pick){this.fullPicks[id]=pick},localStorage:{getItem:()=>null,setItem:()=>{}},flat:[],state:{},KEY:'test',renderFullSimulator:()=>{},render:()=>{},toast:()=>{}};
+for(let i=3;i<=20;i++)context.leagueStandings.push({id:i,name:'Time '+i,points:0,wins:0,played:30,goal_difference:0,goals_for:0,rank:i});
+context.setFullPick=(id,pick)=>{context.fullPicks[id]=pick};
 vm.createContext(context);
 vm.runInContext(engine+';this.api={projectedTable,saveScore,scoreFor,setResult,pickFromScore}',context);
 assert.equal(context.api.saveScore('test',2,0),true,'placar válido');
