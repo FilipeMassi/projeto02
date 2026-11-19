@@ -114,20 +114,28 @@ const outcomeText=(v,m)=>v==='home'?m.a:v==='away'?m.b:'Empate';
 function render(){const root=document.getElementById('timeline');const chunks=matches.map((day,i)=>{const visible=day.items.map((m,j)=>({...m,id:`m${i}-${j}`})).filter(m=>filter==='all'||m.type===filter);if(!visible.length)return '';return `<div class="day"><div class="date-stamp"><div class="date-big">${day.d}</div><div class="weekday">${day.w}</div></div><div class="day-inner">${visible.map(m=>{const result=official[m.id]||live[m.id],actual=outcome(m),selection=actual||state[m.id],wish=desired(m),good=actual&&wish.includes(actual),bad=actual&&wish.length&&!wish.includes(actual),tag=m.type==='vasco'?'<span class="tag red">É O NOSSO</span>':m.type==='final'?'<span class="tag gold">FINAL</span>':m.type==='conditional'?'<span class="tag">ATENÇÃO</span>':'';const controls=result?`<div class="outcome" style="color:#f0c679;cursor:default">${result.status==='live'?'AO VIVO':'FINAL'}<br><strong>${result.home} × ${result.away}</strong></div>`:`<div style="display:flex;flex-direction:column;gap:5px">${[['home','1 · '+m.a],['draw','X · Empate'],['away','2 · '+m.b]].map(([v,label])=>`<button class="outcome ${selection===v?'good':''}" aria-pressed="${selection===v}" onclick="mark('${m.id}','${v}')" title="Simular ${escapeHTML(label)}">${escapeHTML(label)}</button>`).join('')}</div>`;return `<article class="game ${m.type} ${good?'done':bad?'miss':''}"><div><div class="game-time">${escapeHTML(m.t)} ${tag}</div><div class="match">${escapeHTML(m.a)} <span style="color:#80828b;font-size:.75em">×</span> ${escapeHTML(m.b)}</div><div class="wish">Torcida: <strong>${escapeHTML(m.pick)}</strong></div><div class="game-detail">${escapeHTML(m.reason)}</div>${result?`<div class="game-detail" style="color:${good?'#61b78d':bad?'#ed8080':'#e4c38a'}">${result.status==='live'?'● Placar parcial ·':'✓ Placar encerrado ·'} ${good?'Resultado favorável':bad?'Resultado desfavorável':'Impacto condicionado'} · Fonte: ${escapeHTML(result.source)}</div>`:selection?`<div class="game-detail" style="color:#e4c38a">Simulação local: ${escapeHTML(outcomeText(selection,m))}</div>`:''}</div><div class="game-controls">${controls}</div></article>`}).join('')}</div></div>`}).filter(Boolean);root.innerHTML=chunks.length?chunks.join(''):'<div class="empty">Nenhum jogo neste filtro.</div>';renderProgress();renderProjection()}
 const basePoints={'Bahia':53,'Atlético-MG':51,'Bragantino':47,'Santos':47,'São Paulo':44,'Vasco':44},baseGames={'Bahia':34,'Atlético-MG':35,'Bragantino':34,'Santos':34,'São Paulo':34,'Vasco':34};
 function renderProjection(){
-const totals={...basePoints},played=Object.fromEntries(Object.keys(totals).map(k=>[k,0]));let real=0,sim=0;
-for(const m of flat){if(m.type==='final')continue;const actual=official[m.id]?.status==='final'?outcome(m):null,v=actual||state[m.id];if(!v)continue;if(actual)real++;else sim++;
-const h=v==='home'?3:v==='draw'?1:0,a=v==='away'?3:v==='draw'?1:0;
-if(m.a in totals){totals[m.a]+=h;played[m.a]++}if(m.b in totals){totals[m.b]+=a;played[m.b]++}}
-const ordered=Object.keys(totals).sort((a,b)=>totals[b]-totals[a]||a.localeCompare(b,'pt-BR'));
-document.getElementById('projection-table').innerHTML=ordered.map((name,i)=>`<div class="club ${name==='Vasco'?'vasco':''}"><div class="position">${i+1}º*</div><div class="clubname">${escapeHTML(name.toUpperCase())}<div style="font-size:10px;color:#999">${baseGames[name]+played[name]} jogos computados</div></div><div class="pts">${totals[name]}</div></div>`).join('');
-const ceiling=totals.Vasco+3*Math.max(0,38-baseGames.Vasco-played.Vasco);
-document.getElementById('projection-title').textContent=`Vasco: ${totals.Vasco} pontos projetados`;
-document.getElementById('projection-points').innerHTML=`${totals.Vasco} <span>PTS</span>`;
-document.getElementById('projection-summary').textContent=`${played.Vasco}/4 jogos do Vasco considerados; teto teórico ${ceiling} pontos. ${real} placares concluídos e ${sim} simulações aplicadas.`;
-document.getElementById('projection-footnote').textContent='* Ordem parcial entre seis clubes, sem critérios de desempate. Jogos ausentes podem alterar a ordem.';
+const hasOfficial=leagueStandings.length===20;
+const totals=hasOfficial?Object.fromEntries(leagueStandings.map(t=>[t.id,t.points])):{...basePoints};
+const games=hasOfficial?Object.fromEntries(leagueStandings.map(t=>[t.id,t.played])):{...baseGames};
+const byName=name=>hasOfficial?findClub(name)?.id:name;
+let sim=0;
+for(const m of flat){
+if(m.type==='final'||official[m.id]?.status==='final')continue;
+const v=state[m.id];if(!v)continue;
+const h=byName(m.a),a=byName(m.b),hp=v==='home'?3:v==='draw'?1:0,ap=v==='away'?3:v==='draw'?1:0;
+if(h in totals){totals[h]+=hp;games[h]++}if(a in totals){totals[a]+=ap;games[a]++}sim++;
+}
+const names=hasOfficial?leagueStandings.map(t=>({key:t.id,name:t.name,rank:t.rank})):Object.keys(basePoints).map(name=>({key:name,name,rank:null}));
+names.sort((a,b)=>totals[b.key]-totals[a.key]||a.name.localeCompare(b.name,'pt-BR'));
+document.getElementById('projection-table').innerHTML=names.map((t,i)=>`<div class="club ${/vasco/i.test(t.name)?'vasco':''}"><div class="position">${i+1}º*</div><div class="clubname">${escapeHTML(t.name.toUpperCase())}<div style="font-size:10px;color:#999">${games[t.key]} jogos contabilizados</div></div><div class="pts">${totals[t.key]}</div></div>`).join('');
+const vascoKey=byName('Vasco'),vascoPoints=totals[vascoKey]??44,vascoGames=games[vascoKey]??34,ceiling=vascoPoints+3*Math.max(0,38-vascoGames);
+document.getElementById('projection-title').textContent=`Vasco: ${vascoPoints} pontos ${hasOfficial?'(tabela + simulações)':'(projeção histórica)'}`;
+document.getElementById('projection-points').innerHTML=`${vascoPoints} <span>PTS</span>`;
+document.getElementById('projection-summary').textContent=`${vascoGames}/38 jogos contabilizados; teto teórico ${ceiling} pontos. ${sim} simulações futuras aplicadas.`;
+document.getElementById('projection-footnote').textContent=hasOfficial?'* Classificação projetada a partir de 20 clubes da tabela sincronizada, sem desempates simulados. Jogos não selecionados mantêm a pontuação atual.':'* Projeção parcial baseada em 16/11/2026, com seis clubes. Aguardando tabela completa.';
 const p=flat.find(m=>m.type==='final'&&m.a==='Palmeiras'),g=flat.find(m=>m.type==='final'&&m.a==='Atlético-MG');
 const ps=p?(outcome(p)||state[p.id]):null,gs=g?(outcome(g)||state[g.id]):null;
-document.getElementById('projection-condition').textContent=`Libertadores: Palmeiras campeão continental ${ps==='home'?'indicado':'não confirmado'}; Atlético-MG campeão da Sul-Americana ${gs==='home'?'indicado':'não confirmado'}. G-8/G-9 dependem ainda da posição final do Galo, do Grêmio e da tabela completa. Não é possível confirmar a vaga apenas por esta projeção.`;
+document.getElementById('projection-condition').textContent=`Libertadores: Palmeiras campeão continental ${ps==='home'?'indicado':'não confirmado'}; Atlético-MG campeão da Sul-Americana ${gs==='home'?'indicado':'não confirmado'}. A abertura de vagas e a classificação definitiva exigem regras e desempates; esta projeção não garante vaga.`;
 }
 function renderProgress(){const final=flat.filter(m=>official[m.id]?.status==='final');const good=final.filter(m=>desired(m).includes(outcome(m))).length;const bad=final.filter(m=>desired(m).length&&!desired(m).includes(outcome(m))).length;const done=final.length;document.getElementById('progress-label').textContent=`${done} partidas encerradas`;document.getElementById('progress-numeric').textContent=`${done} / ${flat.length}`;document.getElementById('positive-label').textContent=`${good} favoráveis · ${bad} desfavoráveis · ${Object.keys(state).length} simulações locais`;document.getElementById('progress-bar').style.width=`${100*done/flat.length}%`}
 function mark(id,value){if(official[id]||live[id])return;if(state[id]===value)delete state[id];else state[id]=value;try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}render()}
