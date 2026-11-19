@@ -119,6 +119,19 @@
 #full-sim-controls .full-game .score-apply{min-height:44px;width:100%;font-size:14px}
 #full-sim-controls .full-game .result-note{font-size:12px;color:#e4c38a;line-height:1.4}
 @media(max-width:620px){#full-sim-controls .full-games{grid-template-columns:1fr}#full-sim-controls .full-game{padding:15px}}
+/* Correcao: anular alinhamento a direita herdado de .game-controls */
+#full-sim-controls .full-game{width:100%;box-sizing:border-box;align-items:stretch}
+#full-sim-controls .full-game>.game-time,
+#full-sim-controls .full-game>.match,
+#full-sim-controls .full-game>.game-controls,
+#full-sim-controls .full-game>.result-note{width:100%;min-width:0;align-self:stretch;box-sizing:border-box}
+#full-sim-controls .full-game .game-controls{align-items:stretch!important;justify-content:flex-start}
+#full-sim-controls .full-game .quick-picks,
+#full-sim-controls .full-game .score-controls{width:100%;min-width:0;box-sizing:border-box;align-self:stretch}
+#full-sim-controls .full-game .score-line{width:100%;min-width:0}
+#full-sim-controls .full-game .score-line input{box-sizing:border-box;min-width:0}
+#full-sim-controls .full-games{width:100%;box-sizing:border-box}
+@media(max-width:620px){#full-sim-controls .full-games{padding:0 14px}#full-sim-controls .full-game{padding:15px}}
 </style>
 </head>
 <body>
