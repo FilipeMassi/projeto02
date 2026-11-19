@@ -37,7 +37,7 @@ jobs:
           for icon in m["icons"]:
               size=icon["sizes"].split("x")[0]
               icon["src"]=f"./icons/vasco-camisa-v12-{size}.png"
-          p.write_text(json.dumps(m,ensure_ascii=False,indent=2)+"\\n")
+          p.write_text(json.dumps(m,ensure_ascii=False,indent=2)+"\n")
           PY
       - name: Publicar PNGs
         run: |
