@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'icons/vasco-cruz.svg'
+      - 'icons/vasco-app.svg'
       - '.github/workflows/generate-icons.yml'
 permissions:
   contents: write
@@ -21,10 +21,10 @@ jobs:
           from PIL import Image
           from io import BytesIO
           for size in (192,512):
-              png=cairosvg.svg2png(url='icons/vasco-cruz.svg',output_width=int(size*.75),output_height=int(size*.75))
+              png=cairosvg.svg2png(url='icons/vasco-app.svg',output_width=size,output_height=size)
               icon=Image.open(BytesIO(png)).convert('RGBA')
               base=Image.new('RGBA',(size,size),(16,17,20,255))
-              base.alpha_composite(icon,((size-icon.width)//2,(size-icon.height)//2))
+              base.alpha_composite(icon,(0,0))
               base.convert('RGB').save(f'icons/vasco-{size}.png')
           PY
       - name: Publicar PNGs
