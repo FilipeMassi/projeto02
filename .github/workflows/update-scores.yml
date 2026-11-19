@@ -8,6 +8,7 @@ on:
     paths:
       - 'scripts/update_scores.py'
       - 'scripts/update_standings.py'
+      - 'scripts/update_remaining.py'
       - 'data/fixtures.json'
       - '.github/workflows/update-scores.yml'
 permissions:
@@ -24,12 +25,14 @@ jobs:
         run: python3 scripts/update_scores.py
       - name: Buscar classificação completa
         run: python3 scripts/update_standings.py
+      - name: Buscar confrontos restantes
+        run: python3 scripts/update_remaining.py
       - name: Publicar somente se houver novos resultados
         run: |
-          if ! git diff --quiet -- data/results.json data/standings.json; then
+          if ! git diff --quiet -- data/results.json data/standings.json data/remaining.json; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/results.json data/standings.json
+            git add data/results.json data/standings.json data/remaining.json
             git commit -m "data: atualizar placares concluídos"
             git push
           else
