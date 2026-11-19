@@ -71,7 +71,7 @@
 .cutoff-mini{font-size:9px;font-weight:850;letter-spacing:0;border-radius:4px;padding:2px 4px;background:#ffffff15;color:#fff}
 .compact-standings .club{grid-template-columns:65px minmax(0,1fr) 58px}
 @media(max-width:620px){.compact-standings .club{grid-template-columns:59px minmax(0,1fr) 44px;gap:6px}.cutoff-chip{font-size:10px;padding:5px 8px}}
-  </style>
+  .score-controls{grid-column:1/-1;display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:7px}.score-controls label{font-size:11px;color:#c4c6ca}.score-controls input{width:55px;min-height:38px;margin-left:5px;padding:5px;border-radius:7px;background:#101217;border:1px solid #656773;color:#fff;text-align:center;font-size:16px}.score-controls button{border:1px solid #67ae89;border-radius:8px;padding:9px 12px;background:#254d39;color:#fff;font-weight:750}.score-controls input:focus-visible{outline:2px solid #e4c38a}</style>
 </head>
 <body>
   <header class="topbar"><div class="container nav"><a href="#inicio" class="brand" aria-label="Início: Operação Liberta"><span class="mark"><svg viewBox="0 0 100 100" aria-hidden="true"><path fill="#d8313e" d="M40 5h20l-6 26 10-7 26 16-16 16-7-10-7 14 6 30H34l6-30-7-14-7 10-16-16 26-16 10 7z"/></svg></span><span>OPERAÇÃO <span style="color:#fa6870">LIBERTA</span> 2027</span></a><nav class="navlinks"><a href="#missao">A missão</a><a href="#calendario">Calendário</a><a href="#regras">As vagas</a></nav><button class="navbtn" onclick="sharePage()">↗ Compartilhar</button></div></header>
@@ -141,15 +141,17 @@ function positionHTML(rank,projected=false,limit=6){const tag=cutoffLabel(rank,l
 function updateCutoffLegend(tableId,limit){const legend=document.querySelector('[data-cutoff-for="'+tableId+'"]');if(!legend)return;legend.querySelectorAll('[data-cutoff-min]').forEach(el=>{el.hidden=Number(el.dataset.cutoffMin)>limit})}
 function cupResult(id){const m=flat.find(x=>x.id===id);if(!m)return null;const confirmed=official[id]?.status==='final'||live[id]?.status==='final';return confirmed?outcome(m):(state[id]||null)}
 function projectedCutoff(ordered,complete){
-let limit=6,conditions=[];
+const conditions=[];let limit=6;
 const palmeiras=ordered.find(t=>normalizeClub(t.name).includes('palmeiras'));
 const atletico=ordered.find(t=>normalizeClub(t.name).includes('atleticomineiro'));
-const gremio=ordered.find(t=>normalizeClub(t.name).includes('gremio'));
-const lib=cupResult('m7-0'),sula=cupResult('m2-1');
-if(lib==='home'&&palmeiras&&ordered.indexOf(palmeiras)<6){limit++;conditions.push('Palmeiras campeão da Libertadores e entre os seis primeiros')}
-if(sula==='home'&&atletico&&ordered.indexOf(atletico)<limit){limit++;conditions.push('Atlético-MG campeão da Sul-Americana e dentro da faixa')}
-if(complete&&gremio&&ordered.indexOf(gremio)>=16&&cupResult('m10-0')==='home'){limit++;conditions.push('cenário adicional condicionado à Copa do Brasil e ao Grêmio')}
-return {limit:Math.min(9,limit),conditions}
+const libMatch=flat.find(m=>m.type==='final'&&m.a==='Palmeiras');
+const sulaMatch=flat.find(m=>m.type==='final'&&m.a==='Atlético-MG');
+const libPick=libMatch?cupResult(libMatch.id):null;
+const sulaPick=sulaMatch?cupResult(sulaMatch.id):null;
+if(libPick==='home'&&palmeiras&&ordered.indexOf(palmeiras)<6){limit=7;conditions.push('Palmeiras campeão continental e na zona inicial')}
+if(sulaPick==='home'&&atletico&&ordered.indexOf(atletico)<limit){conditions.push('Atlético-MG campeão continental: eventual redistribuição exige validação regulamentar')}
+if(!complete)conditions.push('Campeonato ainda não totalmente simulado');
+return {limit,conditions,provisional:true}
 }
 function renderLeagueStandings(){
 if(leagueStandings.length!==20)return;
@@ -165,6 +167,42 @@ const stats=document.querySelectorAll('.hero .stat-v');if(stats.length>=4){stats
 }
 }
 let remainingFixtures=[],fullPicks={};
+const SCORE_KEY='liberta2027_scores_v1';
+let scores={};try{scores=JSON.parse(localStorage.getItem(SCORE_KEY)||'{}')||{}}catch(e){scores={}}
+const pickFromScore=(h,a)=>h>a?'home':h<a?'away':'draw';
+function scoreFor(id){const v=scores[id];return v&&Number.isInteger(v.home)&&Number.isInteger(v.away)&&v.home>=0&&v.away>=0&&v.home<=30&&v.away<=30?v:null}
+function saveScore(id,home,away){
+const h=Number(home),a=Number(away);
+if(!Number.isInteger(h)||!Number.isInteger(a)||h<0||a<0||h>30||a>30){toast('Informe gols inteiros entre 0 e 30.');return false}
+if(!remainingFixtures.some(m=>m.id===id)){toast('Partida não encontrada no calendário atual.');return false}
+scores[id]={home:h,away:a};setFullPick(id,pickFromScore(h,a));
+try{localStorage.setItem(SCORE_KEY,JSON.stringify(scores))}catch(e){}
+syncTorcidaPick(id);renderFullSimulator();render();return true
+}
+function syncTorcidaPick(id){for(const m of flat){const linked=mappedFixture(m);if(linked?.id===id){if(fullPicks[id])state[m.id]=fullPicks[id];else delete state[m.id]}}try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function setResult(id,pick){
+delete scores[id];try{localStorage.setItem(SCORE_KEY,JSON.stringify(scores))}catch(e){}
+setFullPick(id,pick);syncTorcidaPick(id);renderFullSimulator();render()
+}
+function projectedTable(){
+if(leagueStandings.length!==20)return null;
+const teams=leagueStandings.map(t=>({...t,points:t.points,wins:t.wins,played:t.played,goal_difference:t.goal_difference,goals_for:t.goals_for}));
+const byId=Object.fromEntries(teams.map(t=>[String(t.id),t]));
+let selected=0,scored=0;
+for(const m of remainingFixtures){
+const score=scoreFor(m.id),pick=score?pickFromScore(score.home,score.away):fullPicks[m.id];
+if(!['home','draw','away'].includes(pick))continue;
+const h=byId[m.home_id],a=byId[m.away_id];if(!h||!a)continue;
+selected++;h.played++;a.played++;
+if(pick==='home'){h.points+=3;h.wins++}else if(pick==='away'){a.points+=3;a.wins++}else{h.points++;a.points++}
+if(score){scored++;h.goal_difference+=score.home-score.away;a.goal_difference+=score.away-score.home;h.goals_for+=score.home;a.goals_for+=score.away}
+}
+const complete=remainingFixtures.length>0&&selected===remainingFixtures.length;
+const scoresComplete=complete&&scored===selected;
+teams.sort((a,b)=>b.points-a.points||b.wins-a.wins||(scoresComplete?b.goal_difference-a.goal_difference||b.goals_for-a.goals_for:0)||a.rank-b.rank);
+return {teams,selected,scored,complete,scoresComplete}
+}
+
 function brazilDate(iso){
 const d=new Date(iso);
 return Number.isNaN(d.getTime())?'':new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
@@ -186,27 +224,27 @@ try{fullPicks=JSON.parse(localStorage.getItem('liberta2027_full_picks')||'{}')}c
 function renderFullSimulator(){
 const status=document.getElementById('full-sim-status'),controls=document.getElementById('full-sim-controls'),table=document.getElementById('full-sim-table'),verdict=document.getElementById('full-sim-verdict');
 if(!status||!controls||!table||!verdict)return;
-if(leagueStandings.length!==20||!remainingFixtures.length){status.textContent='Aguardando tabela e calendário completos e consistentes.';controls.innerHTML='';table.innerHTML='';verdict.textContent='';return}
-const teamMap=Object.fromEntries(leagueStandings.map(t=>[String(t.id),{...t,projected_points:t.points,projected_wins:t.wins,projected_played:t.played}]));
-const fixtureCounts=Object.fromEntries(leagueStandings.map(t=>[String(t.id),0]));
-const valid=remainingFixtures.every(m=>{if(!teamMap[m.home_id]||!teamMap[m.away_id]||m.home_id===m.away_id)return false;fixtureCounts[m.home_id]++;fixtureCounts[m.away_id]++;return true})&&leagueStandings.every(t=>fixtureCounts[String(t.id)]===38-t.played);
-const expected=leagueStandings.reduce((sum,t)=>sum+38-t.played,0)/2;
-if(!valid||remainingFixtures.length!==expected){status.textContent='Confrontos inconsistentes com a classificação. Simulação integral bloqueada para evitar números incorretos.';controls.innerHTML='';table.innerHTML='';return}
-let selected=0;
-for(const m of remainingFixtures){const choice=fullPicks[m.id];if(!['home','draw','away'].includes(choice))continue;selected++;const h=teamMap[m.home_id],a=teamMap[m.away_id];h.projected_played++;a.projected_played++;if(choice==='home'){h.projected_points+=3;h.projected_wins++}else if(choice==='away'){a.projected_points+=3;a.projected_wins++}else{h.projected_points++;a.projected_points++}}
-status.textContent=`${selected} de ${remainingFixtures.length} partidas simuladas. Jogos sem seleção permanecem com pontuação atual; classificação definitiva exige todos os jogos e desempates.`;
-controls.innerHTML='<div class="full-games">'+remainingFixtures.map(m=>{const h=teamMap[m.home_id],a=teamMap[m.away_id],pick=fullPicks[m.id]||'';const day=m.date?new Date(m.date).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'Data a confirmar';return `<article class="full-game ${/vasco/i.test(h.name+' '+a.name)?'vasco':''}"><div><div class="full-teams">${escapeHTML(h.name)} <span style="color:#8b8e97">×</span> ${escapeHTML(a.name)}</div><div class="full-date">${escapeHTML(day)} · ${pick?'Resultado selecionado':'Aguardando seu palpite'}</div></div><div class="full-choice" role="group" aria-label="Resultado de ${escapeHTML(h.name)} contra ${escapeHTML(a.name)}">${[['home','1'],['draw','X'],['away','2']].map(([v,label])=>`<button type="button" data-fixture-id="${escapeHTML(m.id)}" data-pick="${v}" aria-pressed="${pick===v}" title="${v==='home'?'Vitória de '+h.name:v==='away'?'Vitória de '+a.name:'Empate'}">${label}</button>`).join('')}</div></article>`}).join('')+'</div>';
-const ordered=Object.values(teamMap).sort((a,b)=>b.projected_points-a.projected_points||b.projected_wins-a.projected_wins||(a.rank??99)-(b.rank??99));
-table.innerHTML=ordered.map((t,i)=>{const tied=ordered.some(x=>x.id!==t.id&&x.projected_points===t.projected_points&&x.projected_wins===t.projected_wins);return `<div class="club ${/vasco/i.test(t.name)?'vasco':''}"><div class="position">${i+1}º${tied?'*':''}</div><div class="clubname">${escapeHTML(t.name.toUpperCase())}<div style="font-size:10px;color:#999">${t.projected_played} J · ${t.projected_wins} V</div></div><div class="pts">${t.projected_points}</div></div>`}).join('');
-const vasco=ordered.find(t=>/vasco/i.test(t.name));const rank=ordered.indexOf(vasco)+1;const cut=6;
-const certainlyAhead=ordered.filter(t=>t.id!==vasco.id&&(t.projected_points>vasco.projected_points||(t.projected_points===vasco.projected_points&&t.projected_wins>vasco.projected_wins))).length;
-const tiedAtVasco=ordered.filter(t=>t.id!==vasco.id&&t.projected_points===vasco.projected_points&&t.projected_wins===vasco.projected_wins).length;
-const rankMin=certainlyAhead+1,rankMax=rankMin+tiedAtVasco;
-const outcome=rankMax<=cut?'dentro da faixa por pontos e vitórias':rankMin>cut?'fora da faixa por pontos e vitórias':'INDEFINIDO por empate nos critérios considerados';
-renderProjection();
-verdict.textContent=`Vasco: ${vasco.projected_points} pontos, ${vasco.projected_wins} vitórias. Posição possível pelos critérios disponíveis: ${rankMin}º${rankMax!==rankMin?' a '+rankMax+'º':''}. Corte hipotético G-${cut}: ${outcome}. ${selected!==remainingFixtures.length?'Cenário INCOMPLETO. ':''}Não considera saldo, gols pró, confronto direto e outros critérios oficiais, nem confirma vaga.`;
+const p=projectedTable();
+if(!p||!remainingFixtures.length){status.textContent='Aguardando classificação e calendário consistentes.';controls.innerHTML='';table.innerHTML='';verdict.textContent='';return}
+status.textContent=`${p.selected} de ${remainingFixtures.length} jogos simulados; ${p.scored} com placar. Jogos sem placar não permitem desempate definitivo.`;
+controls.innerHTML='<div class="full-games">'+remainingFixtures.map(m=>{
+const h=leagueStandings.find(t=>String(t.id)===String(m.home_id)),a=leagueStandings.find(t=>String(t.id)===String(m.away_id));
+const score=scoreFor(m.id),pick=score?pickFromScore(score.home,score.away):(fullPicks[m.id]||'');
+const day=new Date(m.date).toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+return `<article class="full-game ${/vasco/i.test(h.name+' '+a.name)?'vasco':''}"><div><div class="full-teams">${escapeHTML(h.name)} × ${escapeHTML(a.name)}</div><div class="full-date">${escapeHTML(day)} · ${score?'Placar simulado':pick?'Resultado sem placar':'Sem simulação'}</div></div><div class="full-choice" role="group" aria-label="Resultado de ${escapeHTML(h.name)} contra ${escapeHTML(a.name)}">${[['home','1'],['draw','X'],['away','2']].map(([v,label])=>`<button type="button" data-fixture-id="${m.id}" data-pick="${v}" aria-pressed="${pick===v}">${label}</button>`).join('')}</div><div class="score-controls"><label>Placar <input type="number" min="0" max="30" inputmode="numeric" data-score-home="${m.id}" aria-label="Gols de ${escapeHTML(h.name)}" value="${score?score.home:''}" placeholder="0"></label><span>×</span><label><input type="number" min="0" max="30" inputmode="numeric" data-score-away="${m.id}" aria-label="Gols de ${escapeHTML(a.name)}" value="${score?score.away:''}" placeholder="0"></label><button type="button" data-score-save="${m.id}">Aplicar placar</button></div></article>`
+}).join('')+'</div>';
+const cutoff=projectedCutoff(p.teams,p.complete);
+table.innerHTML=p.teams.map((t,i)=>`<div class="club ${cutoffClass(i+1,cutoff.limit)} ${/vasco/i.test(t.name)?'vasco':''}"><div class="position">${positionHTML(i+1,true,cutoff.limit)}</div><div class="clubname">${escapeHTML(t.name.toUpperCase())}<div style="font-size:10px;color:#999">${t.played} J · ${t.wins} V · SG ${t.goal_difference} · GP ${t.goals_for}</div></div><div class="pts">${t.points}</div></div>`).join('');
+const vasco=p.teams.find(t=>/vasco/i.test(t.name)),rank=p.teams.indexOf(vasco)+1;
+verdict.textContent=`Vasco: ${vasco.points} pontos, ${vasco.wins} vitórias, SG ${vasco.goal_difference}. Posição exibida: ${rank}º. ${p.scoresComplete?'Placar completo para os jogos simulados; demais critérios oficiais ainda não aplicados.':'Posição PROVISÓRIA: resultados e/ou placares incompletos.'} Corte ilustrativo G-${cutoff.limit}; vaga não confirmada.`;
+renderProjection()
 }
-document.getElementById('full-sim-controls')?.addEventListener('click',e=>{const el=e.target.closest('button[data-fixture-id]');if(!el)return;const id=el.dataset.fixtureId;setFullPick(id,fullPicks[id]===el.dataset.pick?'':el.dataset.pick);for(const m of flat){const linked=mappedFixture(m);if(linked?.id===id){if(fullPicks[id])state[m.id]=fullPicks[id];else delete state[m.id]}}try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}renderFullSimulator();render()});
+document.getElementById('full-sim-controls')?.addEventListener('click',e=>{
+const save=e.target.closest('button[data-score-save]');
+if(save){const id=save.dataset.scoreSave,root=save.closest('.full-game');saveScore(id,root.querySelector('[data-score-home]').value,root.querySelector('[data-score-away]').value);return}
+const el=e.target.closest('button[data-fixture-id]');if(!el)return;
+const id=el.dataset.fixtureId;setResult(id,fullPicks[id]===el.dataset.pick?'':el.dataset.pick)
+});
 async function syncRemaining(){
 const el=document.getElementById('schedule-coverage');if(!el)return;
 try{const res=await fetch('data/remaining.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();
@@ -235,22 +273,17 @@ const outcomeText=(v,m)=>v==='home'?m.a:v==='away'?m.b:'Empate';
 function render(){const root=document.getElementById('timeline');const chunks=matches.map((day,i)=>{const visible=day.items.map((m,j)=>({...m,id:`m${i}-${j}`})).filter(m=>filter==='all'||m.type===filter);if(!visible.length)return '';return `<div class="day"><div class="date-stamp"><div class="date-big">${day.d}</div><div class="weekday">${day.w}</div></div><div class="day-inner">${visible.map(m=>{const result=official[m.id]?.status==='final'?official[m.id]:live[m.id]?.status==='final'?live[m.id]:null,actual=result?outcome(m):null,selection=actual||state[m.id]||((mappedFixture(m)&&fullPicks[mappedFixture(m).id])||''),wish=desired(m),good=actual&&wish.includes(actual),bad=actual&&wish.length&&!wish.includes(actual),tag=m.type==='vasco'?'<span class="tag red">É O NOSSO</span>':m.type==='final'?'<span class="tag gold">FINAL</span>':m.type==='conditional'?'<span class="tag">ATENÇÃO</span>':'';const controls=result?`<div class="outcome" style="color:#f0c679;cursor:default">${result.status==='live'?'AO VIVO':'FINAL'}<br><strong>${result.home} × ${result.away}</strong></div>`:`<div style="display:flex;flex-direction:column;gap:5px">${[['home','1 · '+m.a],['draw','X · Empate'],['away','2 · '+m.b]].map(([v,label])=>`<button class="outcome ${selection===v?'good':''}" aria-pressed="${selection===v}" data-torcida-id="${m.id}" data-torcida-pick="${v}" title="Simular ${escapeHTML(label)}">${escapeHTML(label)}</button>`).join('')}</div>`;return `<article class="game ${m.type} ${good?'done':bad?'miss':''}"><div><div class="game-time">${escapeHTML(m.t)} ${tag}</div><div class="match">${escapeHTML(m.a)} <span style="color:#80828b;font-size:.75em">×</span> ${escapeHTML(m.b)}</div><div class="wish">Torcida: <strong>${escapeHTML(m.pick)}</strong></div><div class="game-detail">${escapeHTML(m.reason)}</div>${result?`<div class="game-detail" style="color:${good?'#61b78d':bad?'#ed8080':'#e4c38a'}">${result.status==='live'?'● Placar parcial ·':'✓ Placar encerrado ·'} ${good?'Resultado favorável':bad?'Resultado desfavorável':'Impacto condicionado'} · Fonte: ${escapeHTML(result.source)}</div>`:selection?`<div class="game-detail" style="color:#e4c38a">Simulação local: ${escapeHTML(outcomeText(selection,m))}</div>`:''}</div><div class="game-controls">${controls}</div></article>`}).join('')}</div></div>`}).filter(Boolean);root.innerHTML=chunks.length?chunks.join(''):'<div class="empty">Nenhum jogo neste filtro.</div>';renderProgress();renderProjection()}
 const basePoints={'Bahia':53,'Atlético-MG':51,'Bragantino':47,'Santos':47,'São Paulo':44,'Vasco':44},baseGames={'Bahia':34,'Atlético-MG':35,'Bragantino':34,'Santos':34,'São Paulo':34,'Vasco':34};
 function renderProjection(){
-const hasOfficial=leagueStandings.length===20;
-const teams=hasOfficial?leagueStandings.map(t=>({id:String(t.id),name:t.name,points:t.points,wins:t.wins,played:t.played})):Object.entries(basePoints).map(([name,points])=>({id:name,name,points,wins:0,played:baseGames[name]}));
-const map=Object.fromEntries(teams.map(t=>[t.id,t]));
-let selected=0;
-if(hasOfficial&&remainingFixtures.length){for(const m of remainingFixtures){const v=fullPicks[m.id];if(!['home','draw','away'].includes(v))continue;const h=map[m.home_id],a=map[m.away_id];if(!h||!a)continue;selected++;h.played++;a.played++;if(v==='home'){h.points+=3;h.wins++}else if(v==='away'){a.points+=3;a.wins++}else{h.points++;a.points++}}}
-const ordered=teams.sort((a,b)=>b.points-a.points||b.wins-a.wins||a.name.localeCompare(b.name,'pt-BR'));
-const cutoff=projectedCutoff(ordered,hasOfficial&&remainingFixtures.length>0&&selected===remainingFixtures.length);
-updateCutoffLegend('projection-table',cutoff.limit);
-document.getElementById('projection-table').innerHTML=ordered.map((t,i)=>`<div class="club ${cutoffClass(i+1,cutoff.limit)} ${/vasco/i.test(t.name)?'vasco':''}"><div class="position">${positionHTML(i+1,true,cutoff.limit)}</div><div class="clubname">${escapeHTML(t.name.toUpperCase())}<div style="font-size:10px;color:#999">${t.played} jogos · ${t.wins} vitórias</div></div><div class="pts">${t.points}</div></div>`).join('');
-const vasco=ordered.find(t=>/vasco/i.test(t.name)),ceiling=vasco.points+3*Math.max(0,38-vasco.played);
-document.getElementById('projection-title').textContent=`Vasco: ${vasco.points} pontos na simulação única`;
+const p=projectedTable();if(!p)return;
+const {teams,selected,scored,complete,scoresComplete}=p;
+const cutoff=projectedCutoff(teams,complete);updateCutoffLegend('projection-table',cutoff.limit);
+document.getElementById('projection-table').innerHTML=teams.map((t,i)=>`<div class="club ${cutoffClass(i+1,cutoff.limit)} ${/vasco/i.test(t.name)?'vasco':''}"><div class="position">${positionHTML(i+1,true,cutoff.limit)}</div><div class="clubname">${escapeHTML(t.name.toUpperCase())}<div style="font-size:10px;color:#999">${t.played} J · ${t.wins} V · SG ${t.goal_difference} · GP ${t.goals_for}</div></div><div class="pts">${t.points}</div></div>`).join('');
+const vasco=teams.find(t=>/vasco/i.test(t.name)),ceiling=vasco.points+3*Math.max(0,38-vasco.played);
+document.getElementById('projection-title').textContent=`Vasco: ${vasco.points} pontos na simulação`;
 document.getElementById('projection-points').innerHTML=`${vasco.points} <span>PTS</span>`;
-document.getElementById('projection-summary').textContent=`${selected}/${remainingFixtures.length||'?'} jogos simulados · ${vasco.played}/38 jogos do Vasco considerados · teto ${ceiling} pontos.`;
-document.getElementById('projection-footnote').textContent='* Classificação projetada pelos pontos e vitórias; empates restantes não estão oficialmente desempatados. Ambos os modos usam as mesmas escolhas.';
+document.getElementById('projection-summary').textContent=`${selected}/${remainingFixtures.length} jogos simulados · ${scored} com placar · Vasco ${vasco.played}/38 J · teto ${ceiling} pts.`;
+document.getElementById('projection-footnote').textContent=scoresComplete?'* Desempate projetado: pontos, vitórias, saldo de gols e gols pró. Critérios posteriores ainda dependem do regulamento.':'* Ordem provisória: nem todos os jogos têm placar. Saldo e gols pró mostrados são parciais e NÃO determinam desempates definitivos.';
 renderQualification();
-document.getElementById('projection-condition').textContent=`Faixa visual simulada: G-${cutoff.limit}. ${cutoff.conditions.length?'Condições selecionadas: '+cutoff.conditions.join('; ')+'.':'Sem condições adicionais suficientes para ampliar a faixa.'} Extensões são hipóteses dependentes das regras e resultados oficiais; não confirmam vaga.`;
+document.getElementById('projection-condition').textContent=`Faixa ilustrativa: G-${cutoff.limit} (condicional). ${cutoff.conditions.join('; ')}. A distribuição definitiva de vagas depende do regulamento e dos campeões; nenhuma ampliação adicional é afirmada automaticamente.`;
 }
 function renderQualification(){
 const head=document.getElementById('qualification-head');if(!head)return;const detail=document.getElementById('qualification-detail'),list=document.getElementById('qualification-rivals'),note=document.getElementById('qualification-caveat');
@@ -278,7 +311,7 @@ const linked=mappedFixture(m);
 const current=state[id]||((linked&&fullPicks[linked.id])||'');
 const next=current===value?'':value;
 if(next)state[id]=next;else delete state[id];
-if(linked)setFullPick(linked.id,next);
+if(linked){delete scores[linked.id];try{localStorage.setItem(SCORE_KEY,JSON.stringify(scores))}catch(e){}setFullPick(linked.id,next)}
 try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
 render();
 try{renderFullSimulator()}catch(e){console.error('Falha no painel completo, mas palpite salvo:',e)}
@@ -316,7 +349,7 @@ lastLiveSync=Date.now();liveError=false;
 if(changed){render();liveStatus()}
 }
 function refreshLoop(){const active=activeGames().length>0;if(active){syncLive();syncScores()}else syncScores()}
-function resetProgress(){if(!confirm('Limpar todas as simulações dos modos Torcida e Completo?'))return;state={};fullPicks={};try{localStorage.removeItem(KEY);localStorage.removeItem('liberta2027_full_picks')}catch(e){}renderFullSimulator();render();toast('Todas as simulações foram limpas.')}
+function resetProgress(){if(!confirm('Limpar todas as simulações dos modos Torcida e Completo?'))return;state={};fullPicks={};scores={};try{localStorage.removeItem(KEY);localStorage.removeItem('liberta2027_full_picks');localStorage.removeItem(SCORE_KEY)}catch(e){}renderFullSimulator();render();toast('Todas as simulações foram limpas.')}
 document.getElementById('timeline')?.addEventListener('click',e=>{const btn=e.target.closest('button[data-torcida-id]');if(!btn)return;mark(btn.dataset.torcidaId,btn.dataset.torcidaPick)});
 document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{filter=btn.dataset.filter;document.querySelectorAll('.filter').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));render()}));
 let toastTimeout;function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimeout);toastTimeout=setTimeout(()=>el.classList.remove('show'),2800)}
