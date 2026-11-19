@@ -248,7 +248,7 @@ setFullPick(id,pick);syncTorcidaPick(id);renderFullSimulator();render()
 }
 function projectedTable(){
 if(leagueStandings.length!==20)return null;
-const teams=leagueStandings.map(t=>({...t,points:t.points,wins:t.wins,played:t.played,goal_difference:t.goal_difference,goals_for:t.goals_for}));
+const teams=leagueStandings.map(t=>({...t,points:t.points,wins:t.wins,draws:t.draws,losses:t.losses,played:t.played,goal_difference:t.goal_difference,goals_for:t.goals_for}));
 const byId=Object.fromEntries(teams.map(t=>[String(t.id),t]));
 let selected=0,scored=0;
 for(const m of remainingFixtures){
@@ -256,7 +256,7 @@ const score=scoreFor(m.id),pick=score?pickFromScore(score.home,score.away):fullP
 if(!['home','draw','away'].includes(pick))continue;
 const h=byId[m.home_id],a=byId[m.away_id];if(!h||!a)continue;
 selected++;h.played++;a.played++;
-if(pick==='home'){h.points+=3;h.wins++}else if(pick==='away'){a.points+=3;a.wins++}else{h.points++;a.points++}
+if(pick==='home'){h.points+=3;h.wins++;a.losses++}else if(pick==='away'){a.points+=3;a.wins++;h.losses++}else{h.points++;a.points++;h.draws++;a.draws++}
 if(score){scored++;h.goal_difference+=score.home-score.away;a.goal_difference+=score.away-score.home;h.goals_for+=score.home;a.goals_for+=score.away}
 }
 const complete=remainingFixtures.length>0&&selected===remainingFixtures.length;
