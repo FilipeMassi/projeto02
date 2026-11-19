@@ -16,4 +16,25 @@ assert.match(html,/function saveScore\(/,'salvamento de placares ausente');
 assert.match(html,/data-score-save/,'controles de placar ausentes');
 assert.doesNotMatch(html,/cupResult\('m7-0'\)/,'identificador incorreto de final');
 const score={home:2,away:0};const outcome=score.home>score.away?'home':score.home<score.away?'away':'draw';assert.equal(outcome,'home');
+
+const source=match[1];
+const extract=(start,end)=>{const a=source.indexOf(start),b=source.indexOf(end,a);assert(a>=0&&b>a,'função não encontrada: '+start);return source.slice(a,b)};
+const engine=extract('const pickFromScore=', 'function brazilDate(');
+const context={leagueStandings:[{id:1,name:'Vasco',points:40,wins:10,played:30,goal_difference:2,goals_for:30,rank:8},{id:2,name:'Rival',points:40,wins:10,played:30,goal_difference:2,goals_for:30,rank:7}],remainingFixtures:[{id:'test',home_id:1,away_id:2}],fullPicks:{},scores:{},localStorage:{getItem:()=>null,setItem:()=>{}},flat:[],state:{},KEY:'test',renderFullSimulator:()=>{},render:()=>{},toast:()=>{}};
+vm.createContext(context);
+vm.runInContext(engine+';this.api={projectedTable,saveScore,scoreFor,setResult,pickFromScore}',context);
+assert.equal(context.api.saveScore('test',2,0),true,'placar válido');
+let p=context.api.projectedTable();
+assert.equal(p.selected,1);assert.equal(p.scored,1);assert.equal(p.teams[0].id,1);
+assert.equal(p.teams[0].points,43);assert.equal(p.teams[0].wins,11);
+assert.equal(p.teams[0].goal_difference,4);assert.equal(p.teams[0].goals_for,32);
+assert.equal(p.teams[1].goal_difference,0);
+assert.equal(context.api.saveScore('test',-1,0),false,'placar negativo rejeitado');
+assert.equal(context.api.saveScore('test',1.5,0),false,'placar fracionário rejeitado');
+assert.equal(context.api.saveScore('test','',0),false,'placar vazio rejeitado');
+context.scores={};context.fullPicks={test:'draw'};
+p=context.api.projectedTable();assert.equal(p.scored,0);assert.equal(p.teams[0].points,41);assert.equal(p.teams[1].points,41);
+assert.equal(p.teams[0].goal_difference,2,'sem placar não altera saldo');
+assert.equal(context.api.pickFromScore(0,3),'away');
+
 console.log('OK: sintaxe, calendario, classificacao, placares, integridade e identificadores');
