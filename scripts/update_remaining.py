@@ -35,8 +35,13 @@ rows=sorted(matches.values(),key=lambda m:m.get("date") or "")
 # Não publicar lista vazia quando ainda há partidas restantes.
 standings=json.loads((ROOT/"data/standings.json").read_text(encoding="utf-8"))
 remaining=sum(38-x["played"] for x in standings.get("standings",[]))//2
-if remaining>0 and len(rows)<remaining:
-    print(f"Calendário incompleto: {len(rows)}/{remaining} jogos; mantendo dados anteriores.",file=sys.stderr)
+ids={str(t["id"]) for t in standings.get("standings",[])}
+invalid=[m for m in rows if m["home_id"] not in ids or m["away_id"] not in ids or m["home_id"]==m["away_id"]]
+if invalid:
+    print(f"Calendário rejeitado: {len(invalid)} equipes não identificadas.",file=sys.stderr)
+    sys.exit(0)
+if remaining>0 and len(rows)!=remaining:
+    print(f"Cobertura divergente: {len(rows)}/{remaining} jogos; mantendo dados anteriores.",file=sys.stderr)
     sys.exit(0)
 payload={"updated_at":datetime.datetime.now(datetime.timezone.utc).isoformat(),"source":"ESPN","complete":True,"expected_matches":remaining,"matches":rows}
 old=json.loads(DEST.read_text(encoding="utf-8")) if DEST.exists() else {}
