@@ -196,7 +196,7 @@ const libMatch=flat.find(m=>m.type==='final'&&m.a==='Palmeiras');
 const sulaMatch=flat.find(m=>m.type==='final'&&m.a==='Atlético-MG');
 const libPick=libMatch?cupResult(libMatch.id):null;
 const sulaPick=sulaMatch?cupResult(sulaMatch.id):null;
-if(libPick==='home'&&palmeiras&&ordered.indexOf(palmeiras)<6){limit=7;conditions.push('Palmeiras campeão continental e na zona inicial')}
+if(libPick==='home'&&palmeiras&&ordered.indexOf(palmeiras)<6){conditions.push('Palmeiras campeão continental na zona inicial: possível ampliação, pendente de confirmação pelo regulamento oficial')}
 if(sulaPick==='home'&&atletico&&ordered.indexOf(atletico)<limit){conditions.push('Atlético-MG campeão continental: eventual redistribuição exige validação regulamentar')}
 if(!complete)conditions.push('Campeonato ainda não totalmente simulado');
 return {limit,conditions,provisional:true}
