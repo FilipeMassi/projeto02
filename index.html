@@ -241,7 +241,7 @@ scores[id]={home:h,away:a};if(id.startsWith('torcida:')){state[id.slice(8)]=pick
 try{localStorage.setItem(SCORE_KEY,JSON.stringify(scores))}catch(e){}
 if(!id.startsWith('torcida:'))syncTorcidaPick(id);renderFullSimulator();render();return true
 }
-function syncTorcidaPick(id){for(const m of flat){const linked=mappedFixture(m);if(linked?.id===id){if(fullPicks[id])state[m.id]=fullPicks[id];else delete state[m.id]}}try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}}
+function syncTorcidaPick(id){for(const m of flat){const linked=mappedFixture(m);if(linked?.id===id){if(fullPicks[id])state[m.id]=fullPicks[id];else delete state[m.id];delete scores['torcida:'+m.id]}}try{localStorage.setItem(KEY,JSON.stringify(state));localStorage.setItem(SCORE_KEY,JSON.stringify(scores))}catch(e){}}
 function setResult(id,pick){
 delete scores[id];try{localStorage.setItem(SCORE_KEY,JSON.stringify(scores))}catch(e){}
 setFullPick(id,pick);syncTorcidaPick(id);renderFullSimulator();render()
