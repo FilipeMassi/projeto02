@@ -170,7 +170,7 @@ renderProjection();
 verdict.textContent=`Vasco: ${vasco.projected_points} pontos, ${vasco.projected_wins} vitórias. Posição possível pelos critérios disponíveis: ${rankMin}º${rankMax!==rankMin?' a '+rankMax+'º':''}. Corte hipotético G-${cut}: ${outcome}. ${selected!==remainingFixtures.length?'Cenário INCOMPLETO. ':''}Não considera saldo, gols pró, confronto direto e outros critérios oficiais, nem confirma vaga.`;
 }
 document.getElementById('full-sim-controls')?.addEventListener('click',e=>{const el=e.target.closest('button[data-fixture-id]');if(!el)return;const id=el.dataset.fixtureId;setFullPick(id,fullPicks[id]===el.dataset.pick?'':el.dataset.pick);renderFullSimulator();render()});
-async function syncRemaining(){
+async async function syncRemaining(){
 const el=document.getElementById('schedule-coverage');if(!el)return;
 try{const res=await fetch('data/remaining.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();
 if(!data.complete){remainingFixtures=[];renderFullSimulator();el.textContent='Calendário completo ainda em validação. Limites matemáticos atuais usam apenas pontuação e jogos restantes.';return}
