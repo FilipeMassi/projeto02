@@ -1,5 +1,5 @@
-const CACHE='liberta2027-shell-v6';
-const SHELL=['./','./index.html','./manifest.webmanifest','./icons/vasco-app.svg'];
+const CACHE='liberta2027-shell-v13';
+const SHELL=['./','./index.html','./manifest.webmanifest','./icons/vasco-app.svg','./icons/vasco-camisa-v12-192.png','./icons/vasco-camisa-v12-512.png'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',event=>{event.waitUntil(Promise.all([caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))),self.clients.claim()]))});
 self.addEventListener('fetch',event=>{
