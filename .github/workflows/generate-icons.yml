@@ -25,13 +25,25 @@ jobs:
               icon=Image.open(BytesIO(png)).convert('RGBA')
               base=Image.new('RGBA',(size,size),(16,17,20,255))
               base.alpha_composite(icon,(0,0))
-              base.convert('RGB').save(f'icons/vasco-{size}.png')
+              base.convert('RGB').save(f'icons/vasco-camisa-v12-{size}.png')
+          PY
+      - name: Atualizar manifesto para arquivos com nomes novos
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("manifest.webmanifest")
+          m=json.loads(p.read_text())
+          for icon in m["icons"]:
+              size=icon["sizes"].split("x")[0]
+              icon["src"]=f"./icons/vasco-camisa-v12-{size}.png"
+          p.write_text(json.dumps(m,ensure_ascii=False,indent=2)+"\\n")
           PY
       - name: Publicar PNGs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add icons/vasco-192.png icons/vasco-512.png
+          git add icons/vasco-camisa-v12-192.png icons/vasco-camisa-v12-512.png manifest.webmanifest
           if ! git diff --cached --quiet; then
             git commit -m "assets: atualizar PNGs PWA da Cruz de Malta"
             git pull --rebase origin main
