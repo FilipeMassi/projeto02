@@ -34,7 +34,19 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/results.json data/standings.json data/remaining.json
             git commit -m "data: atualizar placares concluídos"
-            git push
+            for attempt in 1 2 3 4 5; do
+              if git push; then
+                echo "Dados publicados com sucesso."
+                break
+              fi
+              if [ "$attempt" -eq 5 ]; then
+                echo "Falha após cinco tentativas de sincronização." >&2
+                exit 1
+              fi
+              git fetch origin main
+              git rebase origin/main
+              sleep $((attempt * 2))
+            done
           else
             echo "Nenhuma alteração nos placares."
           fi
