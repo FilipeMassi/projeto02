@@ -1,0 +1,39 @@
+name: Gerar icones PWA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'icons/vasco-cruz.svg'
+      - '.github/workflows/generate-icons.yml'
+permissions:
+  contents: write
+jobs:
+  icons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gerar PNGs a partir da Cruz de Malta
+        run: |
+          python -m pip install --quiet cairosvg pillow
+          python - <<'PY'
+          import cairosvg
+          from PIL import Image
+          from io import BytesIO
+          for size in (192,512):
+              png=cairosvg.svg2png(url='icons/vasco-cruz.svg',output_width=int(size*.75),output_height=int(size*.75))
+              icon=Image.open(BytesIO(png)).convert('RGBA')
+              base=Image.new('RGBA',(size,size),(16,17,20,255))
+              base.alpha_composite(icon,((size-icon.width)//2,(size-icon.height)//2))
+              base.convert('RGB').save(f'icons/vasco-{size}.png')
+          PY
+      - name: Publicar PNGs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add icons/vasco-192.png icons/vasco-512.png
+          if ! git diff --cached --quiet; then
+            git commit -m "assets: atualizar PNGs PWA da Cruz de Malta"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
