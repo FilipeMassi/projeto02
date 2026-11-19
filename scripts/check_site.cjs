@@ -20,8 +20,8 @@ const score={home:2,away:0};const outcome=score.home>score.away?'home':score.hom
 const source=match[1];
 const extract=(start,end)=>{const a=source.indexOf(start),b=source.indexOf(end,a);assert(a>=0&&b>a,'função não encontrada: '+start);return source.slice(a,b)};
 const engine=extract('const pickFromScore=', 'function brazilDate(');
-const context={leagueStandings:[{id:1,name:'Vasco',points:40,wins:10,played:30,goal_difference:2,goals_for:30,rank:8},{id:2,name:'Rival',points:40,wins:10,played:30,goal_difference:2,goals_for:30,rank:7}],remainingFixtures:[{id:'test',home_id:1,away_id:2}],fullPicks:{},scores:{},SCORE_KEY:'test-scores',setFullPick:function(id,pick){this.fullPicks[id]=pick},localStorage:{getItem:()=>null,setItem:()=>{}},flat:[],state:{},KEY:'test',renderFullSimulator:()=>{},render:()=>{},toast:()=>{}};
-for(let i=3;i<=20;i++)context.leagueStandings.push({id:i,name:'Time '+i,points:0,wins:0,played:30,goal_difference:0,goals_for:0,rank:i});
+const context={leagueStandings:[{id:1,name:'Vasco',points:40,wins:10,draws:10,losses:10,played:30,goal_difference:2,goals_for:30,rank:8},{id:2,name:'Rival',points:40,wins:10,draws:10,losses:10,played:30,goal_difference:2,goals_for:30,rank:7}],remainingFixtures:[{id:'test',home_id:1,away_id:2}],fullPicks:{},scores:{},SCORE_KEY:'test-scores',setFullPick:function(id,pick){this.fullPicks[id]=pick},localStorage:{getItem:()=>null,setItem:()=>{}},flat:[],state:{},KEY:'test',renderFullSimulator:()=>{},render:()=>{},toast:()=>{}};
+for(let i=3;i<=20;i++)context.leagueStandings.push({id:i,name:'Time '+i,points:0,wins:0,draws:0,losses:30,played:30,goal_difference:0,goals_for:0,rank:i});
 context.setFullPick=(id,pick)=>{context.fullPicks[id]=pick};
 vm.createContext(context);
 vm.runInContext(engine+';this.api={projectedTable,saveScore,scoreFor,setResult,pickFromScore}',context);
@@ -45,10 +45,12 @@ assert.equal(p.teams.find(t=>t.id===1).points,41,'empate soma um ponto ao mandan
 assert.equal(p.teams.find(t=>t.id===2).points,41,'empate soma um ponto ao visitante');
 assert.equal(p.teams.find(t=>t.id===1).goal_difference,2,'empate nao altera saldo');
 assert.equal(p.teams.find(t=>t.id===1).goals_for,31,'empate acrescenta gols pro');
+assert.equal(p.teams.find(t=>t.id===1).draws,11,'empate incrementa empates');
 assert.equal(context.api.saveScore('test',0,2),true,'vitoria visitante deve ser aceita');
 p=context.api.projectedTable();
 assert.equal(p.teams.find(t=>t.id===2).points,43,'vitoria visitante soma tres pontos');
 assert.equal(p.teams.find(t=>t.id===2).wins,11,'vitoria visitante incrementa vitorias');
+assert.equal(p.teams.find(t=>t.id===1).losses,11,'derrota incrementa derrotas');
 assert.equal(p.teams.find(t=>t.id===1).goal_difference,0,'saldo mandante atualizado');
 assert.equal(p.teams.find(t=>t.id===2).goal_difference,4,'saldo visitante atualizado');
 assert.match(html,/delete scores\['torcida:'\+m\.id\]/,'sincronizacao deve limpar placares locais obsoletos');
