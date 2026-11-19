@@ -108,7 +108,8 @@ const status=document.getElementById('full-sim-status'),controls=document.getEle
 if(!status||!controls||!table||!verdict)return;
 if(leagueStandings.length!==20||!remainingFixtures.length){status.textContent='Aguardando tabela e calendário completos e consistentes.';controls.innerHTML='';table.innerHTML='';verdict.textContent='';return}
 const teamMap=Object.fromEntries(leagueStandings.map(t=>[String(t.id),{...t,projected_points:t.points,projected_wins:t.wins,projected_played:t.played}]));
-const valid=remainingFixtures.every(m=>teamMap[m.home_id]&&teamMap[m.away_id]&&m.home_id!==m.away_id);
+const fixtureCounts=Object.fromEntries(leagueStandings.map(t=>[String(t.id),0]));
+const valid=remainingFixtures.every(m=>{if(!teamMap[m.home_id]||!teamMap[m.away_id]||m.home_id===m.away_id)return false;fixtureCounts[m.home_id]++;fixtureCounts[m.away_id]++;return true})&&leagueStandings.every(t=>fixtureCounts[String(t.id)]===38-t.played);
 const expected=leagueStandings.reduce((sum,t)=>sum+38-t.played,0)/2;
 if(!valid||remainingFixtures.length!==expected){status.textContent='Confrontos inconsistentes com a classificação. Simulação integral bloqueada para evitar números incorretos.';controls.innerHTML='';table.innerHTML='';return}
 let selected=0;
@@ -127,9 +128,13 @@ try{const res=await fetch('data/remaining.json?ts='+Date.now(),{cache:'no-store'
 if(!data.complete){remainingFixtures=[];renderFullSimulator();el.textContent='Calendário completo ainda em validação. Limites matemáticos atuais usam apenas pontuação e jogos restantes.';return}
 const expected=leagueStandings.length===20?leagueStandings.reduce((sum,t)=>sum+38-t.played,0)/2:null;
 const rows=data.matches||[];
-const covered=expected!==null&&rows.length===expected;
+const counts=Object.fromEntries(leagueStandings.map(t=>[String(t.id),0]));
+const ids=new Set(rows.map(m=>m.id));
+const validTeams=rows.every(m=>m.home_id in counts&&m.away_id in counts&&m.home_id!==m.away_id);
+if(validTeams)for(const m of rows){counts[m.home_id]++;counts[m.away_id]++}
+const covered=expected!==null&&rows.length===expected&&ids.size===rows.length&&validTeams&&leagueStandings.every(t=>counts[String(t.id)]===38-t.played);
 remainingFixtures=covered?rows:[];renderFullSimulator();
-el.textContent=`Confrontos restantes: ${rows.length} encontrados${expected!==null?' de '+expected+' esperados':''}. ${covered?'Cobertura quantitativa validada; cruzamento de confrontos e desempates ainda pendente.':'Cobertura incompleta: não calcular probabilidades ou posições definitivas.'}`;
+el.textContent=`Confrontos restantes: ${rows.length} encontrados${expected!==null?' de '+expected+' esperados':''}. ${covered?'Cobertura validada por clube e por partida; desempates ainda pendentes.':'Cobertura incompleta: não calcular probabilidades ou posições definitivas.'}`;
 }catch(e){el.textContent='Calendário completo indisponível; análise limitada à pontuação.'}
 }
 async function syncStandings(){
