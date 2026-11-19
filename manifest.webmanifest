@@ -1,0 +1,19 @@
+{
+  "id": "/projeto02/",
+  "name": "Operação Liberta 2027",
+  "short_name": "Liberta 2027",
+  "description": "Simulador vascaíno de resultados e classificação para a Libertadores 2027.",
+  "start_url": "/projeto02/",
+  "scope": "/projeto02/",
+  "display": "standalone",
+  "background_color": "#101114",
+  "theme_color": "#101114",
+  "icons": [
+    {
+      "src": "./icons/vasco-cruz.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
