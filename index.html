@@ -132,13 +132,17 @@ const stats=document.querySelectorAll('.hero .stat-v');if(stats.length>=4){stats
 }
 }
 let remainingFixtures=[],fullPicks={};
+function brazilDate(iso){
+const d=new Date(iso);
+return Number.isNaN(d.getTime())?'':new Intl.DateTimeFormat('en-CA',{timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);
+}
 function mappedFixture(m){
 if(!remainingFixtures.length||leagueStandings.length!==20)return null;
-const day=m.day?.split('/')||[];
-const date=day.length===2?'2026-'+day[1]+'-'+day[0]:null;
+const parts=m.day?.split('/')||[];
+const date=parts.length===2?'2026-'+parts[1]+'-'+parts[0]:null;
 const home=findClub(m.a),away=findClub(m.b);
 if(!home||!away||!date)return null;
-return remainingFixtures.find(x=>x.date?.slice(0,10)===date&&String(x.home_id)===String(home.id)&&String(x.away_id)===String(away.id))||null;
+return remainingFixtures.find(x=>brazilDate(x.date)===date&&String(x.home_id)===String(home.id)&&String(x.away_id)===String(away.id))||null;
 }
 function setFullPick(id,value){
 if(value)fullPicks[id]=value;else delete fullPicks[id];
