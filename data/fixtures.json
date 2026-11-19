@@ -1,0 +1,263 @@
+[
+  {
+    "id": "m0-0",
+    "date": "2026-11-18",
+    "home": "Coritiba",
+    "away": "Santos",
+    "time": "19h30",
+    "pick": "Coritiba",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m0-1",
+    "date": "2026-11-18",
+    "home": "Corinthians",
+    "away": "Botafogo",
+    "time": "21h30",
+    "pick": "Corinthians",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m0-2",
+    "date": "2026-11-18",
+    "home": "Grêmio",
+    "away": "Bahia",
+    "time": "21h30",
+    "pick": "Bahia",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m1-0",
+    "date": "2026-11-19",
+    "home": "Vasco",
+    "away": "Internacional",
+    "time": "19h30",
+    "pick": "VASCO",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m1-1",
+    "date": "2026-11-19",
+    "home": "Vitória",
+    "away": "Bragantino",
+    "time": "19h30",
+    "pick": "Vitória",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m1-2",
+    "date": "2026-11-19",
+    "home": "São Paulo",
+    "away": "Fluminense",
+    "time": "21h30",
+    "pick": "Fluminense",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m2-0",
+    "date": "2026-11-21",
+    "home": "Bahia",
+    "away": "Coritiba",
+    "time": "17h30",
+    "pick": "Bahia",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m2-1",
+    "date": "2026-11-21",
+    "home": "Atlético-MG",
+    "away": "Boca Juniors",
+    "time": "19h30",
+    "pick": "ATLÉTICO-MG CAMPEÃO",
+    "competition": "conmebol.sudamericana"
+  },
+  {
+    "id": "m3-0",
+    "date": "2026-11-22",
+    "home": "Bragantino",
+    "away": "Vasco",
+    "time": "19h30",
+    "pick": "VASCO",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m4-0",
+    "date": "2026-11-23",
+    "home": "Internacional",
+    "away": "Vitória",
+    "time": "19h30",
+    "pick": "Empate",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m4-1",
+    "date": "2026-11-23",
+    "home": "Botafogo",
+    "away": "São Paulo",
+    "time": "20h",
+    "pick": "Empate",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m4-2",
+    "date": "2026-11-23",
+    "home": "Santos",
+    "away": "Grêmio",
+    "time": "21h",
+    "pick": "Empate (condicional)",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m5-0",
+    "date": "2026-11-25",
+    "home": "Atlético-MG",
+    "away": "Corinthians",
+    "time": "20h",
+    "pick": "Depende do cenário",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m6-0",
+    "date": "2026-11-26",
+    "home": "São Paulo",
+    "away": "Remo",
+    "time": "20h",
+    "pick": "Remo ou empate",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m7-0",
+    "date": "2026-11-28",
+    "home": "Palmeiras",
+    "away": "Estudiantes",
+    "time": "17h",
+    "pick": "PALMEIRAS CAMPEÃO",
+    "competition": "conmebol.libertadores"
+  },
+  {
+    "id": "m7-1",
+    "date": "2026-11-28",
+    "home": "Botafogo",
+    "away": "Bahia",
+    "time": "21h",
+    "pick": "Bahia",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m8-0",
+    "date": "2026-11-29",
+    "home": "Coritiba",
+    "away": "Flamengo",
+    "time": "16h",
+    "pick": "Flamengo",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m8-1",
+    "date": "2026-11-29",
+    "home": "Vitória",
+    "away": "Santos",
+    "time": "16h",
+    "pick": "Vitória",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m8-2",
+    "date": "2026-11-29",
+    "home": "Corinthians",
+    "away": "Grêmio",
+    "time": "18h30",
+    "pick": "Corinthians",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m8-3",
+    "date": "2026-11-29",
+    "home": "Internacional",
+    "away": "Bragantino",
+    "time": "18h30",
+    "pick": "Internacional",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m8-4",
+    "date": "2026-11-29",
+    "home": "Atlético-MG",
+    "away": "Vasco",
+    "time": "19h30",
+    "pick": "VASCO",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m9-0",
+    "date": "2026-12-02",
+    "home": "Vasco",
+    "away": "Vitória",
+    "time": "21h30",
+    "pick": "VASCO",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m9-1",
+    "date": "2026-12-02",
+    "home": "Santos",
+    "away": "Botafogo",
+    "time": "21h30",
+    "pick": "Empate",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m9-2",
+    "date": "2026-12-02",
+    "home": "Bragantino",
+    "away": "Fluminense",
+    "time": "21h30",
+    "pick": "Fluminense",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m9-3",
+    "date": "2026-12-02",
+    "home": "Athletico-PR",
+    "away": "São Paulo",
+    "time": "21h30",
+    "pick": "Athletico-PR",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m9-4",
+    "date": "2026-12-02",
+    "home": "Grêmio",
+    "away": "Mirassol",
+    "time": "21h30",
+    "pick": "Mirassol",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m9-5",
+    "date": "2026-12-02",
+    "home": "Bahia",
+    "away": "Atlético-MG",
+    "time": "21h30",
+    "pick": "Depende do Galo no G-7",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m9-6",
+    "date": "2026-12-02",
+    "home": "Palmeiras",
+    "away": "Coritiba",
+    "time": "21h30",
+    "pick": "Palmeiras",
+    "competition": "bra.1"
+  },
+  {
+    "id": "m10-0",
+    "date": "2026-12-06",
+    "home": "Palmeiras",
+    "away": "Grêmio",
+    "time": "Horário a confirmar",
+    "pick": "Sem preferência fixa",
+    "competition": "bra.copa_do_brasil"
+  }
+]
