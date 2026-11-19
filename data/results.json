@@ -1,4 +1,26 @@
 {
-  "updated_at": null,
-  "matches": {}
+  "updated_at": "2026-11-19T04:35:00Z",
+  "matches": {
+    "m0-0": {
+      "home": 0,
+      "away": 1,
+      "source": "manual",
+      "status": "final",
+      "reference": "18/11/2026"
+    },
+    "m0-1": {
+      "home": 4,
+      "away": 0,
+      "source": "manual",
+      "status": "final",
+      "reference": "18/11/2026"
+    },
+    "m0-2": {
+      "home": 0,
+      "away": 0,
+      "source": "manual",
+      "status": "final",
+      "reference": "18/11/2026"
+    }
+  }
 }
