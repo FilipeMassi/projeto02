@@ -199,7 +199,7 @@ function formatSyncTime(iso){if(!iso)return 'sem data';const d=new Date(iso);ret
 function cutoffClass(rank,limit=6){return rank>limit?'cut-out':rank<=6?'cut-g6':rank===7?'cut-g7':rank===8?'cut-g8':'cut-g9'}
 function cutoffLabel(rank,limit=6){return rank>limit?'':rank<=6?'G6':'G'+rank}
 function positionHTML(rank,projected=false,limit=6){const tag=cutoffLabel(rank,limit);return `${rank}º${projected?'*':''}${tag?'<span class="cutoff-mini" aria-label="Faixa '+(rank<=6?'G-6':'G-'+rank)+'">'+tag+'</span>':''}`}
-function updateCutoffLegend(tableId,limit){const legend=document.querySelector('[data-cutoff-for="'+tableId+'"]');if(!legend)return;legend.querySelectorAll('[data-cutoff-min]').forEach(el=>{el.hidden=Number(el.dataset.cutoffMin)>limit})}
+function updateCutoffLegend(tableId,limit){const legend=document.querySelector('[data-cutoff-for="'+tableId+'"]');if(!legend)return;legend.querySelectorAll('[data-cutoff-min]').forEach(el=>{el.hidden=false;el.title=Number(el.dataset.cutoffMin)>limit?'Cenário hipotético; vaga adicional não confirmada':'Faixa considerada no cenário'})}
 function cupResult(id){const m=flat.find(x=>x.id===id);if(!m)return null;const confirmed=official[id]?.status==='final'||live[id]?.status==='final';return confirmed?outcome(m):(state[id]||null)}
 function projectedCutoff(ordered,complete){
 const conditions=[];let limit=6;
