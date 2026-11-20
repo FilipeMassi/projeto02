@@ -227,8 +227,9 @@ if(cupWinner&&cupRunner&&String(cupWinner)!==String(cupRunner)){
  // Art. 6 §5: campeao ja classificado diretamente transfere grupos ao vice.
  const championHasGroup=chosen.get(champion)?.phase==='groups';
  if(championHasGroup){
-  if(!assign(runner,'groups','Copa do Brasil - vice'))pending.push('preliminary');
-  else events.push('Vice da Copa do Brasil recebe a vaga direta do campeao');
+  assign(runner,'groups','Copa do Brasil - vice');
+  pending.push('preliminary');
+  events.push('Vice da Copa do Brasil recebe a vaga direta do campeao');
  }else{
   if(!assign(champion,'groups','Copa do Brasil - campeao'))pending.push('groups');
   if(!assign(runner,'preliminary','Copa do Brasil - vice'))pending.push('preliminary');
