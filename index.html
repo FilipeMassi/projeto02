@@ -246,36 +246,29 @@ for(const phase of pending)next(phase,'Redistribuicao Brasileirão');
 return {qualifiers:[...chosen].map(([id,v])=>({id,...v})),limit:ids.reduce((n,id,i)=>chosen.has(id)?i+1:n,0),events,complete:!!(cupWinner&&cupRunner)};
 }
 function projectedCutoff(ordered,complete){
-const conditions=['Base regulamentar: G-5 (4 vagas de grupos e 1 preliminar).'];
+const conditions=['G-6 assegurado pela final Palmeiras x Grêmio da Copa do Brasil'];
 const libMatch=flat.find(m=>m.type==='final'&&m.a==='Palmeiras');
 const sulaMatch=flat.find(m=>m.type==='final'&&m.a==='Atlético-MG');
-const libChampion=libMatch&&cupResult(libMatch.id)==='home';
-const sulaChampion=sulaMatch&&cupResult(sulaMatch.id)==='home';
-const gremioRank=ordered.findIndex(t=>normalizeClub(t.name)===normalizeClub('Grêmio'))+1;
-const gremioRelegated=gremioRank>=17;
-if(libChampion&&sulaChampion&&gremioRelegated){
- conditions.push('Cenário de torcida selecionado: Palmeiras campeão da Libertadores, Atlético-MG campeão da Sul-Americana e Grêmio no Z-4');
- conditions.push('G-9 é hipótese da simulação, não confirmação de nove vagas pelo regulamento');
- if(!complete)conditions.push('Tabela ainda provisória: jogos restantes não totalmente simulados');
- return {limit:9,conditions,provisional:true,scenario:'g9'};
-}
-let limit=5;
-for(const [club,won] of [['Palmeiras',libChampion],['Atlético-MG',sulaChampion]]){
- if(!won)continue;
- const rank=ordered.findIndex(t=>normalizeClub(t.name)===normalizeClub(club))+1;
- if(rank>0&&rank<=limit){limit++;conditions.push(club+' campeão continental dentro da faixa: redistribuição projetada')}
- else conditions.push(club+' campeão continental: sem ampliação automática da faixa');
-}
-conditions.push('Copa do Brasil não integrada; demais ampliações dependem de condições adicionais');
-if(!complete)conditions.push('Campeonato ainda não totalmente simulado');
-return {limit,conditions,provisional:true}
+const palmeiras=!!(libMatch&&cupResult(libMatch.id)==='home');
+const atletico=!!(sulaMatch&&cupResult(sulaMatch.id)==='home');
+const rankOf=name=>ordered.findIndex(t=>normalizeClub(t.name)===normalizeClub(name))+1;
+const gremioRelegated=rankOf('Grêmio')>=17;
+const atleticoRank=rankOf('Atlético-MG');
+const palmeirasRank=rankOf('Palmeiras');
+let limit=6;
+if(gremioRelegated){limit++;conditions.push('Grêmio rebaixado: vaga da Copa do Brasil redistribuída')}
+if(palmeiras&&palmeirasRank>0&&palmeirasRank<=6){limit++;conditions.push('Palmeiras campeão da Libertadores dentro da faixa classificatória')}
+if(atletico&&atleticoRank>0&&atleticoRank<=limit){limit++;conditions.push('Atlético-MG campeão da Sul-Americana já abrangido pelo corte anterior')}
+else if(atletico)conditions.push('Atlético-MG fora do corte anterior: título continental não amplia a faixa');
+if(!complete)conditions.push('Posições provisórias: faltam jogos para simular');
+return {limit:Math.min(limit,9),conditions,provisional:!complete}
 }
 function renderLeagueStandings(){
 if(leagueStandings.length!==20)return;
 const root=document.getElementById('official-standings');if(!root)return;
-updateCutoffLegend('official-standings',5);
+updateCutoffLegend('official-standings',6);
 const focus=leagueStandings.filter(t=>t.rank>=5&&t.rank<=12);
-root.innerHTML=focus.map(t=>`<div class="club ${cutoffClass(t.rank,5)} ${normalizeClub(t.name).includes('vasco')?'vasco':''}"><div class="position">${positionHTML(t.rank,false,5)}</div><div class="clubname">${escapeHTML(t.name.toUpperCase())}<div style="font-size:10px;color:#999">${t.played} J · ${t.wins} V · SG ${t.goal_difference??'—'}</div></div><div class="pts">${t.points}</div></div>`).join('');
+root.innerHTML=focus.map(t=>`<div class="club ${cutoffClass(t.rank,6)} ${normalizeClub(t.name).includes('vasco')?'vasco':''}"><div class="position">${positionHTML(t.rank,false,6)}</div><div class="clubname">${escapeHTML(t.name.toUpperCase())}<div style="font-size:10px;color:#999">${t.played} J · ${t.wins} V · SG ${t.goal_difference??'—'}</div></div><div class="pts">${t.points}</div></div>`).join('');
 document.getElementById('official-standings-caption').textContent=`Classificação: ${leagueSource||'fonte esportiva'} · atualizada em ${formatSyncTime(leagueUpdated)} (Brasília) · 20 clubes`;
 const stamp=document.getElementById('hero-update');if(stamp)stamp.textContent=`◉ Base atualizada: ${formatSyncTime(leagueUpdated)}`;
 const label=document.getElementById('projection-source-label');if(label)label.textContent=`Projeção · Classificação de ${formatSyncTime(leagueUpdated)}`;
@@ -354,7 +347,7 @@ return `<article class="game full-game ${/vasco/i.test(h.name+' '+a.name)?'vasco
 const cutoff=projectedCutoff(p.teams,p.complete);
 table.innerHTML=p.teams.map((t,i)=>`<div class="club ${cutoffClass(i+1,cutoff.limit)} ${/vasco/i.test(t.name)?'vasco':''}"><div class="position">${positionHTML(i+1,true,cutoff.limit)}</div><div class="clubname">${escapeHTML(t.name.toUpperCase())}<div style="font-size:10px;color:#999">${t.played} J · ${t.wins} V · SG ${t.goal_difference} · GP ${t.goals_for}</div></div><div class="pts">${t.points}</div></div>`).join('');
 const vasco=p.teams.find(t=>/vasco/i.test(t.name)),rank=p.teams.indexOf(vasco)+1;
-verdict.textContent=`Vasco: ${vasco.points} pontos, ${vasco.wins} vitórias, SG ${vasco.goal_difference}. Posição exibida: ${rank}º. ${p.scoresComplete?'Placar completo para os jogos simulados; demais critérios oficiais ainda não aplicados.':'Posição PROVISÓRIA: resultados e/ou placares incompletos.'} Corte provisório G-${cutoff.limit}; Copa do Brasil ainda não integrada e vaga não confirmada.`;
+verdict.textContent=`Vasco: ${vasco.points} pontos, ${vasco.wins} vitórias, SG ${vasco.goal_difference}. Posição exibida: ${rank}º. ${p.scoresComplete?'Placar completo para os jogos simulados; demais critérios oficiais ainda não aplicados.':'Posição PROVISÓRIA: resultados e/ou placares incompletos.'} Corte simulado G-${cutoff.limit}; ${cutoff.conditions.join('; ')}.`;
 renderProjection()
 }
 document.getElementById('full-sim-controls')?.addEventListener('click',e=>{
@@ -403,7 +396,7 @@ document.getElementById('projection-points').innerHTML=`${vasco.points} <span>PT
 document.getElementById('projection-summary').textContent=`${selected}/${remainingFixtures.length} jogos simulados · ${scored} com placar · Vasco ${vasco.played}/38 J · teto ${ceiling} pts.`;
 document.getElementById('projection-footnote').textContent=scoresComplete?'* Desempate projetado: pontos, vitórias, saldo de gols e gols pró. Critérios posteriores ainda dependem do regulamento.':'* Ordem provisória: nem todos os jogos têm placar. Saldo e gols pró mostrados são parciais e NÃO determinam desempates definitivos.';
 renderQualification();
-document.getElementById('projection-condition').textContent=`Faixa do cenário simulado: G-${cutoff.limit} (hipótese; Copa do Brasil não integrada). ${cutoff.conditions.join('; ')}. A distribuição definitiva de vagas depende do regulamento e dos campeões; nenhuma ampliação adicional é afirmada automaticamente.`;
+document.getElementById('projection-condition').textContent=`Faixa do cenário simulado: G-${cutoff.limit}. ${cutoff.conditions.join('; ')}. A classificação exibida depende das escolhas e posições projetadas.`;
 }
 function renderQualification(){
 const head=document.getElementById('qualification-head');if(!head)return;const detail=document.getElementById('qualification-detail'),list=document.getElementById('qualification-rivals'),note=document.getElementById('qualification-caveat');
