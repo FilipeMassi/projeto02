@@ -258,7 +258,7 @@ const gremioRelegated=rankOf('Grêmio')>=17;
 const atleticoRank=rankOf('Atlético-MG');
 const palmeirasRank=rankOf('Palmeiras');
 let limit=6;
-if(gremioRelegated){limit++;conditions.push('Grêmio rebaixado: vaga da Copa do Brasil redistribuída')}
+if(gremioRelegated){limit++;conditions.push('Grêmio rebaixado: possível ampliação de vagas (hipótese sujeita ao regulamento oficial)')}
 if(palmeiras&&palmeirasRank>0&&palmeirasRank<=6){limit++;conditions.push('Palmeiras campeão da Libertadores dentro da faixa classificatória')}
 if(atletico&&atleticoRank>0&&atleticoRank<=limit){limit++;conditions.push('Atlético-MG campeão da Sul-Americana já abrangido pelo corte anterior')}
 else if(atletico)conditions.push('Atlético-MG fora do corte anterior: título continental não amplia a faixa');
