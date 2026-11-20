@@ -19,7 +19,7 @@ function scenario({gremio=18,atletico=7,palmeiras=2,lib=true,sula=true}={}){
  const ordered=Array.from({length:20},(_,i)=>({name:'Equipe '+i}));
  ordered[palmeiras-1]={name:'Palmeiras'};ordered[atletico-1]={name:'Atlético-MG'};ordered[gremio-1]={name:'Grêmio'};
  const flat=[{id:'lib',type:'final',a:'Palmeiras'},{id:'sula',type:'final',a:'Atlético-MG'}];
- const context={flat,ordered,normalizeClub:x=>x.normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z]/g,''),cupResult:id=>(id==='lib'?lib:sula)?'home':'away'};
+ const context={flat,ordered,normalizeClub:x=>x.normalize('NFD').replace(/[^a-zA-Z]/g,'').toLowerCase().replace(/[^a-z]/g,''),cupResult:id=>(id==='lib'?lib:sula)?'home':'away'};
  vm.createContext(context);vm.runInContext(cutoffSource+';this.result=projectedCutoff(ordered,true)',context);return context.result.limit;
 }
 assert.equal(scenario({lib:false,sula:false,gremio:16}),6,'G6 inicial');
