@@ -1,36 +1,9 @@
 {
-  "updated_at": "2026-11-20T00:23:25.162302+00:00",
+  "updated_at": "2026-11-20T06:34:58.107871+00:00",
   "source": "ESPN",
   "complete": true,
-  "expected_matches": 33,
+  "expected_matches": 30,
   "matches": [
-    {
-      "id": "401841308",
-      "date": "2026-11-19T22:30Z",
-      "home_id": "3454",
-      "away_id": "1936",
-      "home": "Vasco da Gama",
-      "away": "Internacional",
-      "status": "STATUS_SECOND_HALF"
-    },
-    {
-      "id": "401841317",
-      "date": "2026-11-19T22:30Z",
-      "home_id": "3457",
-      "away_id": "6079",
-      "home": "Vitória",
-      "away": "Red Bull Bragantino",
-      "status": "STATUS_SECOND_HALF"
-    },
-    {
-      "id": "401841309",
-      "date": "2026-11-20T00:30Z",
-      "home_id": "2026",
-      "away_id": "3445",
-      "home": "São Paulo",
-      "away": "Fluminense",
-      "status": "STATUS_SCHEDULED"
-    },
     {
       "id": "401841322",
       "date": "2026-11-21T19:30Z",
