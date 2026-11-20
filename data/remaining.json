@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-19T05:00:54.123507+00:00",
+  "updated_at": "2026-11-20T00:23:25.162302+00:00",
   "source": "ESPN",
   "complete": true,
   "expected_matches": 33,
@@ -11,7 +11,7 @@
       "away_id": "1936",
       "home": "Vasco da Gama",
       "away": "Internacional",
-      "status": "STATUS_SCHEDULED"
+      "status": "STATUS_SECOND_HALF"
     },
     {
       "id": "401841317",
@@ -20,7 +20,7 @@
       "away_id": "6079",
       "home": "Vitória",
       "away": "Red Bull Bragantino",
-      "status": "STATUS_SCHEDULED"
+      "status": "STATUS_SECOND_HALF"
     },
     {
       "id": "401841309",
