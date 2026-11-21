@@ -379,8 +379,26 @@ if(leagueUpdated&&d.updated_at&&Date.parse(d.updated_at)<Date.parse(leagueUpdate
 leagueStandings=d.standings;leagueUpdated=d.updated_at;leagueSource=d.source;renderLeagueStandings();renderProjection();syncRemaining();renderFullSimulator();
 }catch(e){console.warn('Tabela completa indisponível; preservando a base histórica:',e)}
 }
+const FINAL_RESULTS_KEY='liberta2027_confirmed_results_v1';
 let official={};
 let officialUpdated=null;
+try{
+ const saved=JSON.parse(localStorage.getItem(FINAL_RESULTS_KEY)||'{}');
+ if(saved&&typeof saved==='object'&&saved.matches&&typeof saved.matches==='object'){
+  official=Object.fromEntries(Object.entries(saved.matches).filter(([id,v])=>flat.some(m=>m.id===id)&&v?.status==='final'&&Number.isInteger(v.home)&&Number.isInteger(v.away)));
+  officialUpdated=saved.updated_at||null;
+ }
+}catch(e){console.warn('Cache local de resultados indisponível:',e)}
+function mergeConfirmedResults(data){
+ if(!data||!data.matches||typeof data.matches!=='object'||Array.isArray(data.matches))throw Error('Resposta de resultados inválida');
+ const incoming=Object.fromEntries(Object.entries(data.matches).filter(([id,v])=>flat.some(m=>m.id===id)&&v?.status==='final'&&Number.isInteger(v.home)&&Number.isInteger(v.away)));
+ const stale=officialUpdated&&(!data.updated_at||Date.parse(data.updated_at)<Date.parse(officialUpdated));
+ if(stale)return false;
+ official={...official,...incoming};
+ if(data.updated_at)officialUpdated=data.updated_at;
+ try{localStorage.setItem(FINAL_RESULTS_KEY,JSON.stringify({updated_at:officialUpdated,matches:official}))}catch(e){}
+ return true;
+}
 const outcome=m=>{const s=official[m.id]||live[m.id];return !s?null:s.home>s.away?'home':s.home<s.away?'away':'draw'};
 const desired=m=>{const p=m.pick.toLowerCase();if(p==='empate'||p==='empate (condicional)')return ['draw'];if(p.includes(' ou empate'))return [m.a.toLowerCase()===p.split(' ou ')[0]? 'home':'away','draw'];if(informational.includes(m.pick))return [];if(p.includes('campeão'))return [m.pick.toLowerCase().includes(m.a.toLowerCase())?'home':'away'];if(p==='vasco')return [m.a==='Vasco'?'home':'away'];return [m.a.toLowerCase()===p?'home':m.b.toLowerCase()===p?'away':'draw']};
 const outcomeText=(v,m)=>v==='home'?m.a:v==='away'?m.b:'Empate';
@@ -442,7 +460,7 @@ const fixtures=flat.map(m=>({...m,date:'2026-'+m.day.slice(3)+'-'+m.day.slice(0,
 function activeGames(){const now=Date.now();return fixtures.filter(m=>{const t=brazilGameTime(m);return Number.isFinite(t)&&now>=t-15*60000&&now<=t+210*60000&&!official[m.id]?.status?.includes('final')})}
 function liveStatus(){const el=document.getElementById('live-status');if(!el)return;const active=activeGames();el.textContent=active.length?`● ${active.length} jogo(s) na janela de acompanhamento · consulta a cada 60 s`:'Próxima consulta intensiva apenas durante os jogos';}
 async function syncScores(){
-try{const res=await fetch('data/results.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();official=data.matches||{};officialUpdated=data.updated_at;render();liveStatus()}catch(e){console.warn('Falha ao carregar resultados compartilhados:',e)}
+try{const res=await fetch('data/results.json?ts='+Date.now(),{cache:'no-store'});if(!res.ok)throw Error('HTTP '+res.status);const data=await res.json();if(mergeConfirmedResults(data)){render();liveStatus()}}catch(e){console.warn('Falha ao carregar resultados compartilhados:',e)}
 }
 async function syncLive(){
 const active=activeGames();if(!active.length||document.hidden)return;
