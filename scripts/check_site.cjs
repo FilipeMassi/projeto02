@@ -11,6 +11,9 @@ const counts=Object.fromEntries(standings.standings.map(t=>[String(t.id),0]));
 for(const m of fixtures.matches){assert(m.home_id in counts&&m.away_id in counts,'clube desconhecido');assert.notEqual(m.home_id,m.away_id);counts[m.home_id]++;counts[m.away_id]++}
 for(const t of standings.standings)assert.equal(counts[String(t.id)],38-t.played,'jogos restantes de '+t.name);
 assert.match(html,/const SCORE_KEY=/,'placares devem persistir');
+assert.match(html,/FINAL_RESULTS_KEY='liberta2027_confirmed_results_v1'/,'placares finais devem ter cache persistente');
+assert.match(html,/official=\{\.\.\.official,\.\.\.incoming\}/,'respostas parciais nao podem apagar finais');
+assert.match(html,/if\(stale\)return false/,'resposta antiga nao pode substituir resultados');
 assert.match(html,/rank===6\?'cut-g6extra'/,'sexta posicao precisa de cor propria');
 assert.match(html,/data-cutoff-min="6"/,'legenda G6 deve existir');
 assert.match(html,/Date.parse\(d.updated_at\)<Date.parse\(leagueUpdated\)/,'sincronizacao nao pode retroceder');
