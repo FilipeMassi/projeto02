@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-20T06:34:58.107871+00:00",
+  "updated_at": "2026-11-21T19:38:45.535388+00:00",
   "source": "ESPN",
   "complete": true,
   "expected_matches": 30,
@@ -11,7 +11,7 @@
       "away_id": "819",
       "home": "Palmeiras",
       "away": "Flamengo",
-      "status": "STATUS_SCHEDULED"
+      "status": "STATUS_FIRST_HALF"
     },
     {
       "id": "401841327",
