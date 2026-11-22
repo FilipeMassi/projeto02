@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-20T06:34:50.522849+00:00",
+  "updated_at": "2026-11-22T00:06:57.402962+00:00",
   "source": "ESPN",
   "source_url": "https://site.api.espn.com/apis/v2/sports/soccer/bra.1/standings",
   "complete": true,
@@ -9,13 +9,13 @@
       "name": "Flamengo",
       "abbreviation": "FLA",
       "rank": 1,
-      "points": 79,
-      "played": 35,
+      "points": 80,
+      "played": 36,
       "wins": 24,
-      "draws": 7,
+      "draws": 8,
       "losses": 4,
-      "goals_for": 73,
-      "goals_against": 30,
+      "goals_for": 74,
+      "goals_against": 31,
       "goal_difference": 43
     },
     {
@@ -23,13 +23,13 @@
       "name": "Palmeiras",
       "abbreviation": "PAL",
       "rank": 2,
-      "points": 73,
-      "played": 35,
+      "points": 74,
+      "played": 36,
       "wins": 21,
-      "draws": 10,
+      "draws": 11,
       "losses": 4,
-      "goals_for": 63,
-      "goals_against": 25,
+      "goals_for": 64,
+      "goals_against": 26,
       "goal_difference": 38
     },
     {
@@ -80,13 +80,13 @@
       "abbreviation": "BAH",
       "rank": 6,
       "points": 54,
-      "played": 35,
+      "played": 36,
       "wins": 14,
       "draws": 12,
-      "losses": 9,
+      "losses": 10,
       "goals_for": 50,
-      "goals_against": 45,
-      "goal_difference": 5
+      "goals_against": 46,
+      "goal_difference": 4
     },
     {
       "id": "7632",
@@ -145,10 +145,24 @@
       "goal_difference": -4
     },
     {
+      "id": "3456",
+      "name": "Coritiba",
+      "abbreviation": "CFC",
+      "rank": 11,
+      "points": 45,
+      "played": 36,
+      "wins": 12,
+      "draws": 9,
+      "losses": 15,
+      "goals_for": 41,
+      "goals_against": 52,
+      "goal_difference": -11
+    },
+    {
       "id": "2026",
       "name": "São Paulo",
       "abbreviation": "SAO",
-      "rank": 11,
+      "rank": 12,
       "points": 44,
       "played": 35,
       "wins": 12,
@@ -162,7 +176,7 @@
       "id": "6086",
       "name": "Botafogo",
       "abbreviation": "BOT",
-      "rank": 12,
+      "rank": 13,
       "points": 42,
       "played": 35,
       "wins": 11,
@@ -171,20 +185,6 @@
       "goals_for": 46,
       "goals_against": 57,
       "goal_difference": -11
-    },
-    {
-      "id": "3456",
-      "name": "Coritiba",
-      "abbreviation": "CFC",
-      "rank": 13,
-      "points": 42,
-      "played": 35,
-      "wins": 11,
-      "draws": 9,
-      "losses": 15,
-      "goals_for": 40,
-      "goals_against": 52,
-      "goal_difference": -12
     },
     {
       "id": "3457",

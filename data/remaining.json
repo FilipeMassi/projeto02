@@ -1,27 +1,9 @@
 {
-  "updated_at": "2026-11-21T19:38:45.535388+00:00",
+  "updated_at": "2026-11-22T00:07:02.365218+00:00",
   "source": "ESPN",
   "complete": true,
-  "expected_matches": 30,
+  "expected_matches": 28,
   "matches": [
-    {
-      "id": "401841322",
-      "date": "2026-11-21T19:30Z",
-      "home_id": "2029",
-      "away_id": "819",
-      "home": "Palmeiras",
-      "away": "Flamengo",
-      "status": "STATUS_FIRST_HALF"
-    },
-    {
-      "id": "401841327",
-      "date": "2026-11-21T20:30Z",
-      "home_id": "9967",
-      "away_id": "3456",
-      "home": "Bahia",
-      "away": "Coritiba",
-      "status": "STATUS_SCHEDULED"
-    },
     {
       "id": "401841325",
       "date": "2026-11-22T00:00Z",
@@ -29,7 +11,7 @@
       "away_id": "2022",
       "home": "Chapecoense",
       "away": "Cruzeiro",
-      "status": "STATUS_SCHEDULED"
+      "status": "STATUS_FIRST_HALF"
     },
     {
       "id": "401841318",
