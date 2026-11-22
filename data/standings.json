@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-22T07:16:52.183759+00:00",
+  "updated_at": "2026-11-22T21:34:29.026736+00:00",
   "source": "ESPN",
   "source_url": "https://site.api.espn.com/apis/v2/sports/soccer/bra.1/standings",
   "complete": true,
@@ -65,14 +65,14 @@
       "name": "Athletico Paranaense",
       "abbreviation": "CAP",
       "rank": 5,
-      "points": 54,
-      "played": 35,
-      "wins": 15,
+      "points": 57,
+      "played": 36,
+      "wins": 16,
       "draws": 9,
       "losses": 11,
-      "goals_for": 52,
-      "goals_against": 45,
-      "goal_difference": 7
+      "goals_for": 56,
+      "goals_against": 47,
+      "goal_difference": 9
     },
     {
       "id": "9967",
@@ -262,13 +262,13 @@
       "abbreviation": "REMO",
       "rank": 19,
       "points": 32,
-      "played": 35,
+      "played": 36,
       "wins": 7,
       "draws": 11,
-      "losses": 17,
-      "goals_for": 39,
-      "goals_against": 57,
-      "goal_difference": -18
+      "losses": 18,
+      "goals_for": 41,
+      "goals_against": 61,
+      "goal_difference": -20
     },
     {
       "id": "9318",

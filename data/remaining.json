@@ -1,18 +1,9 @@
 {
-  "updated_at": "2026-11-22T07:16:56.079620+00:00",
+  "updated_at": "2026-11-22T21:34:36.749061+00:00",
   "source": "ESPN",
   "complete": true,
-  "expected_matches": 27,
+  "expected_matches": 26,
   "matches": [
-    {
-      "id": "401841318",
-      "date": "2026-11-22T19:00Z",
-      "home_id": "3458",
-      "away_id": "4936",
-      "home": "Athletico-PR",
-      "away": "Remo",
-      "status": "STATUS_SCHEDULED"
-    },
     {
       "id": "401841324",
       "date": "2026-11-22T21:30Z",
@@ -20,7 +11,7 @@
       "away_id": "9169",
       "home": "Fluminense",
       "away": "Mirassol",
-      "status": "STATUS_SCHEDULED"
+      "status": "STATUS_FIRST_HALF"
     },
     {
       "id": "401841321",
