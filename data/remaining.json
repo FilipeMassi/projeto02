@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T02:18:22.503492+00:00",
+  "updated_at": "2026-11-23T22:50:38.393067+00:00",
   "source": "ESPN",
   "complete": true,
   "expected_matches": 24,
@@ -11,7 +11,7 @@
       "away_id": "3457",
       "home": "Internacional",
       "away": "Vitória",
-      "status": "STATUS_SCHEDULED"
+      "status": "STATUS_FIRST_HALF"
     },
     {
       "id": "401841326",
