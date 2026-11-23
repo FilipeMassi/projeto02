@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-22T21:34:29.026736+00:00",
+  "updated_at": "2026-11-23T02:18:15.776633+00:00",
   "source": "ESPN",
   "source_url": "https://site.api.espn.com/apis/v2/sports/soccer/bra.1/standings",
   "complete": true,
@@ -51,14 +51,14 @@
       "name": "Fluminense",
       "abbreviation": "FLU",
       "rank": 4,
-      "points": 60,
-      "played": 35,
-      "wins": 17,
+      "points": 63,
+      "played": 36,
+      "wins": 18,
       "draws": 9,
       "losses": 9,
-      "goals_for": 56,
+      "goals_for": 57,
       "goals_against": 42,
-      "goal_difference": 14
+      "goal_difference": 15
     },
     {
       "id": "3458",
@@ -103,10 +103,24 @@
       "goal_difference": 4
     },
     {
+      "id": "6079",
+      "name": "Red Bull Bragantino",
+      "abbreviation": "BRA",
+      "rank": 8,
+      "points": 50,
+      "played": 36,
+      "wins": 14,
+      "draws": 8,
+      "losses": 14,
+      "goals_for": 46,
+      "goals_against": 41,
+      "goal_difference": 5
+    },
+    {
       "id": "2674",
       "name": "Santos",
       "abbreviation": "SAN",
-      "rank": 8,
+      "rank": 9,
       "points": 50,
       "played": 35,
       "wins": 13,
@@ -117,32 +131,18 @@
       "goal_difference": 2
     },
     {
-      "id": "6079",
-      "name": "Red Bull Bragantino",
-      "abbreviation": "BRA",
-      "rank": 9,
-      "points": 47,
-      "played": 35,
-      "wins": 13,
-      "draws": 8,
-      "losses": 14,
-      "goals_for": 45,
-      "goals_against": 41,
-      "goal_difference": 4
-    },
-    {
       "id": "3454",
       "name": "Vasco da Gama",
       "abbreviation": "VAS",
       "rank": 10,
       "points": 47,
-      "played": 35,
+      "played": 36,
       "wins": 13,
       "draws": 8,
-      "losses": 14,
+      "losses": 15,
       "goals_for": 47,
-      "goals_against": 51,
-      "goal_difference": -4
+      "goals_against": 52,
+      "goal_difference": -5
     },
     {
       "id": "3456",
@@ -206,13 +206,13 @@
       "abbreviation": "MIR",
       "rank": 15,
       "points": 41,
-      "played": 35,
+      "played": 36,
       "wins": 10,
       "draws": 11,
-      "losses": 14,
+      "losses": 15,
       "goals_for": 39,
-      "goals_against": 48,
-      "goal_difference": -9
+      "goals_against": 49,
+      "goal_difference": -10
     },
     {
       "id": "874",

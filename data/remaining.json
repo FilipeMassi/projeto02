@@ -1,27 +1,9 @@
 {
-  "updated_at": "2026-11-22T21:34:36.749061+00:00",
+  "updated_at": "2026-11-23T02:18:22.503492+00:00",
   "source": "ESPN",
   "complete": true,
-  "expected_matches": 26,
+  "expected_matches": 24,
   "matches": [
-    {
-      "id": "401841324",
-      "date": "2026-11-22T21:30Z",
-      "home_id": "3445",
-      "away_id": "9169",
-      "home": "Fluminense",
-      "away": "Mirassol",
-      "status": "STATUS_FIRST_HALF"
-    },
-    {
-      "id": "401841321",
-      "date": "2026-11-22T22:30Z",
-      "home_id": "6079",
-      "away_id": "3454",
-      "home": "Red Bull Bragantino",
-      "away": "Vasco da Gama",
-      "status": "STATUS_SCHEDULED"
-    },
     {
       "id": "401841323",
       "date": "2026-11-23T22:30Z",
