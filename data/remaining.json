@@ -1,36 +1,9 @@
 {
-  "updated_at": "2026-11-23T22:50:38.393067+00:00",
+  "updated_at": "2026-11-24T06:48:05.502350+00:00",
   "source": "ESPN",
   "complete": true,
-  "expected_matches": 24,
+  "expected_matches": 21,
   "matches": [
-    {
-      "id": "401841323",
-      "date": "2026-11-23T22:30Z",
-      "home_id": "1936",
-      "away_id": "3457",
-      "home": "Internacional",
-      "away": "Vitória",
-      "status": "STATUS_FIRST_HALF"
-    },
-    {
-      "id": "401841326",
-      "date": "2026-11-23T23:00Z",
-      "home_id": "6086",
-      "away_id": "2026",
-      "home": "Botafogo",
-      "away": "São Paulo",
-      "status": "STATUS_SCHEDULED"
-    },
-    {
-      "id": "401841320",
-      "date": "2026-11-24T00:00Z",
-      "home_id": "2674",
-      "away_id": "6273",
-      "home": "Santos",
-      "away": "Grêmio",
-      "status": "STATUS_SCHEDULED"
-    },
     {
       "id": "401841335",
       "date": "2026-11-24T21:00Z",
