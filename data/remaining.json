@@ -1,18 +1,9 @@
 {
-  "updated_at": "2026-11-24T06:48:05.502350+00:00",
+  "updated_at": "2026-11-25T02:56:39.912484+00:00",
   "source": "ESPN",
   "complete": true,
-  "expected_matches": 21,
+  "expected_matches": 20,
   "matches": [
-    {
-      "id": "401841335",
-      "date": "2026-11-24T21:00Z",
-      "home_id": "9318",
-      "away_id": "2029",
-      "home": "Chapecoense",
-      "away": "Palmeiras",
-      "status": "STATUS_SCHEDULED"
-    },
     {
       "id": "401841319",
       "date": "2026-11-25T23:00Z",

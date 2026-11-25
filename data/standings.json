@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-24T06:47:56.987704+00:00",
+  "updated_at": "2026-11-25T02:56:29.399968+00:00",
   "source": "ESPN",
   "source_url": "https://site.api.espn.com/apis/v2/sports/soccer/bra.1/standings",
   "complete": true,
@@ -24,13 +24,13 @@
       "abbreviation": "PAL",
       "rank": 2,
       "points": 74,
-      "played": 36,
+      "played": 37,
       "wins": 21,
       "draws": 11,
-      "losses": 4,
+      "losses": 5,
       "goals_for": 64,
-      "goals_against": 26,
-      "goal_difference": 38
+      "goals_against": 29,
+      "goal_difference": 35
     },
     {
       "id": "2022",
@@ -275,14 +275,14 @@
       "name": "Chapecoense",
       "abbreviation": "CHA",
       "rank": 20,
-      "points": 21,
-      "played": 36,
-      "wins": 4,
+      "points": 24,
+      "played": 37,
+      "wins": 5,
       "draws": 9,
       "losses": 23,
-      "goals_for": 34,
+      "goals_for": 37,
       "goals_against": 74,
-      "goal_difference": -40
+      "goal_difference": -37
     }
   ]
 }
