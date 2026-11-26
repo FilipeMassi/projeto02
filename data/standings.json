@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-25T02:56:29.399968+00:00",
+  "updated_at": "2026-11-26T03:58:25.683395+00:00",
   "source": "ESPN",
   "source_url": "https://site.api.espn.com/apis/v2/sports/soccer/bra.1/standings",
   "complete": true,
@@ -93,13 +93,13 @@
       "name": "Atlético-MG",
       "abbreviation": "CAM",
       "rank": 7,
-      "points": 51,
-      "played": 35,
+      "points": 52,
+      "played": 36,
       "wins": 14,
-      "draws": 9,
+      "draws": 10,
       "losses": 12,
-      "goals_for": 44,
-      "goals_against": 40,
+      "goals_for": 45,
+      "goals_against": 41,
       "goal_difference": 4
     },
     {
@@ -201,10 +201,24 @@
       "goal_difference": -11
     },
     {
+      "id": "874",
+      "name": "Corinthians",
+      "abbreviation": "COR",
+      "rank": 15,
+      "points": 41,
+      "played": 36,
+      "wins": 10,
+      "draws": 11,
+      "losses": 15,
+      "goals_for": 41,
+      "goals_against": 43,
+      "goal_difference": -2
+    },
+    {
       "id": "6273",
       "name": "Grêmio",
       "abbreviation": "GRE",
-      "rank": 15,
+      "rank": 16,
       "points": 41,
       "played": 36,
       "wins": 10,
@@ -218,7 +232,7 @@
       "id": "9169",
       "name": "Mirassol",
       "abbreviation": "MIR",
-      "rank": 16,
+      "rank": 17,
       "points": 41,
       "played": 36,
       "wins": 10,
@@ -227,20 +241,6 @@
       "goals_for": 39,
       "goals_against": 49,
       "goal_difference": -10
-    },
-    {
-      "id": "874",
-      "name": "Corinthians",
-      "abbreviation": "COR",
-      "rank": 17,
-      "points": 40,
-      "played": 35,
-      "wins": 10,
-      "draws": 10,
-      "losses": 15,
-      "goals_for": 40,
-      "goals_against": 42,
-      "goal_difference": -2
     },
     {
       "id": "1936",
