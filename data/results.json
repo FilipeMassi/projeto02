@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-26T03:58:25.504572+00:00",
+  "updated_at": "2026-11-27T04:48:38.995205+00:00",
   "matches": {
     "m0-0": {
       "home": 0,
@@ -91,6 +91,13 @@
       "source": "espn",
       "status": "final",
       "event_id": "401841319"
+    },
+    "m6-0": {
+      "home": 3,
+      "away": 1,
+      "source": "espn",
+      "status": "final",
+      "event_id": "401841329"
     }
   }
 }

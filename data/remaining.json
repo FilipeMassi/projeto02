@@ -1,18 +1,9 @@
 {
-  "updated_at": "2026-11-26T03:58:31.659894+00:00",
+  "updated_at": "2026-11-27T04:48:45.134685+00:00",
   "source": "ESPN",
   "complete": true,
-  "expected_matches": 19,
+  "expected_matches": 18,
   "matches": [
-    {
-      "id": "401841329",
-      "date": "2026-11-26T23:00Z",
-      "home_id": "2026",
-      "away_id": "4936",
-      "home": "São Paulo",
-      "away": "Remo",
-      "status": "STATUS_SCHEDULED"
-    },
     {
       "id": "401841337",
       "date": "2026-11-27T23:00Z",
