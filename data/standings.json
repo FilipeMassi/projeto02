@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-27T04:48:39.157263+00:00",
+  "updated_at": "2026-11-28T04:52:39.812079+00:00",
   "source": "ESPN",
   "source_url": "https://site.api.espn.com/apis/v2/sports/soccer/bra.1/standings",
   "complete": true,
@@ -37,14 +37,14 @@
       "name": "Cruzeiro",
       "abbreviation": "CRU",
       "rank": 3,
-      "points": 66,
-      "played": 36,
-      "wins": 20,
+      "points": 69,
+      "played": 37,
+      "wins": 21,
       "draws": 6,
       "losses": 10,
-      "goals_for": 59,
+      "goals_for": 60,
       "goals_against": 50,
-      "goal_difference": 9
+      "goal_difference": 10
     },
     {
       "id": "3445",
@@ -52,13 +52,13 @@
       "abbreviation": "FLU",
       "rank": 4,
       "points": 63,
-      "played": 36,
+      "played": 37,
       "wins": 18,
       "draws": 9,
-      "losses": 9,
+      "losses": 10,
       "goals_for": 57,
-      "goals_against": 42,
-      "goal_difference": 15
+      "goals_against": 43,
+      "goal_difference": 14
     },
     {
       "id": "3458",

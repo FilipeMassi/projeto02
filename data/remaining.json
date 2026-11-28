@@ -1,18 +1,9 @@
 {
-  "updated_at": "2026-11-27T23:14:42.489939+00:00",
+  "updated_at": "2026-11-28T04:52:44.520907+00:00",
   "source": "ESPN",
   "complete": true,
-  "expected_matches": 18,
+  "expected_matches": 17,
   "matches": [
-    {
-      "id": "401841337",
-      "date": "2026-11-27T23:00Z",
-      "home_id": "3445",
-      "away_id": "2022",
-      "home": "Fluminense",
-      "away": "Cruzeiro",
-      "status": "STATUS_FIRST_HALF"
-    },
     {
       "id": "401841336",
       "date": "2026-11-29T00:00Z",
